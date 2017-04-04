@@ -254,6 +254,7 @@ void printArray(T(&theArray)[N][M]) {
 //	return b;
 //}
 //
+//
 
 //key_binary_ret should be 64 bit long
 void permutePC_1(int key_binary[], int key_binary_ret[], int key_binary_size)
