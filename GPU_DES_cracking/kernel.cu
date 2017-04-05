@@ -151,6 +151,16 @@ int PC_2[] = { 13, 16, 10, 23, 0, 4,
 45, 41, 49, 35, 28, 31 };
 
 
+int IP[] = { 57, 49, 41, 33, 25, 17, 9, 1,
+59, 51, 43, 35, 27, 19, 11, 3,
+61, 53, 45, 37, 29, 21, 13, 5,
+63, 55, 47, 39, 31, 23, 15, 7,
+56, 48, 40, 32, 24, 16,  8, 0,
+58, 50, 42, 34, 26, 18, 10, 2,
+60, 52, 44, 36, 28, 20, 12, 4,
+62, 54, 46, 38, 30, 22, 14, 6 };
+
+
 
 void fun()
 {
@@ -335,7 +345,7 @@ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 }
 
 //key_binary_ret should be 64 bit long
-string desEncyption(string message, int key_binary[], int key_size)
+string desEncyption(int message_binary[], int message_size,int key_binary[], int key_size)
 {
 	int des_block_size_bytes = 8;
 	int des_block_size_bits = 64;
@@ -344,9 +354,20 @@ string desEncyption(string message, int key_binary[], int key_size)
 	//DEBUG
 //		cout << message.size();
 //		cout << "\n" << message << "\n";
+//if (message.size() * CHAR_BIT != des_block_size_bits)
+//		cout << message.size() * CHAR_BIT;
+		
 
-	if (message.size() % des_block_size_bytes)
-		message.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
+	if (message_size % des_block_size_bytes)
+	{
+		//int tmp_message_binary[message_size + des_block_size_bytes - (message_size % des_block_size_bytes)]
+			cout << "KICIA";
+	//	message_binary.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
+	}
+
+	//OLD Verwsion with message as string 
+//	if (message.size() % des_block_size_bytes)
+//		message.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
 
 	//DEBUG
 //		cout << "\n" << message << "\n";
@@ -405,6 +426,15 @@ string desEncyption(string message, int key_binary[], int key_size)
 	//DEBUG
 //	printArray2(K, 10000);
 
+	//WARNING!!! message size 
+	int message_binary_ret[64];
+	permutePC(message_binary, message_binary_ret, message_size, IP);
+
+	//DEBUG
+	for(int i = 0; i < message_size; i++)
+		cout << message_binary_ret[i];
+
+
 	return "NOT IMPLEMENTED";
 }
 
@@ -443,13 +473,37 @@ string desEncyption(string message, int key_binary[], int key_size)
 //101111111001000110001101001111010011111100001010
 //110010110011110110001011000011100001011111110101
 
-
+//MESSAGE AFTER IP
+//1100110000000000110011001111111111110000101010101111000010101010
 
 int main()
 {
+	//TESTING
+//	char msg[] = { 'a' , '\0'};
+//	cout << msg << endl;
+//	cout << sizeof(msg) << endl;
+//	cout << sizeof(msg) * CHAR_BIT << endl;
+//	
+//	string str = "a";
+//	cout << endl << str << endl;
+//	cout << str.size() << endl;
+//	cout << str.size() * CHAR_BIT << endl;
+//
+//	
+//	int a = 0x0123456789ABCDEF;
+//	stringstream stream;
+//	stream << hex << a;
+//	string str2 = stream.str();
+//	cout << endl << str2 << endl;
+//	cout << hex << str2 << endl;
+//	cout << str2.size() << endl;
+//	cout << str2.size() * CHAR_BIT << endl;
+	//TESTING
+
 	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
 	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
-	string cypherText = desEncyption(message, key_binary, sizeof(key_binary) / sizeof(key_binary[0]));
+	string cypherText = desEncyption(message_binary, sizeof(message_binary) / sizeof(message_binary[0]), key_binary, sizeof(key_binary) / sizeof(key_binary[0]));
 
 
 	//OLD
