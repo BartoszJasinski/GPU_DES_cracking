@@ -242,6 +242,25 @@ int S[8][4][16] = { { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
 {2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } }
 };
 
+int P[] ={15, 6, 19, 20,
+	28, 11, 27, 16,
+	0, 14, 22, 25,
+	4, 17, 30, 9,
+	1, 7, 23, 13,
+	31, 26, 2, 8,
+	18, 12, 29, 5,
+	21, 10, 3, 24};
+
+int IP_1[] = {
+39, 7, 47, 15, 55, 23, 63, 31,
+38, 6, 46, 14, 54, 22, 62, 30,
+37, 5, 45, 13, 53, 21, 61, 29,
+36, 4, 44, 12, 52, 20, 60, 28,
+35, 3, 43, 11, 51, 19, 59, 27,
+34, 2, 42, 10, 50, 18, 58, 26,
+33, 1, 41, 9, 49, 17, 57, 25,
+32, 0, 40, 8, 48, 16, 56, 24 };
+
 void fun()
 {
 	for(int i = 0; i < 56; i++)
@@ -524,23 +543,39 @@ void f(int R[], int K[], int ret_tab[])
 		}
 
 	}
-
 	//DEBUG
-	for(int i = 0; i < 32; i++)
-	{
-		if (!(i % 4))
-			cout << " ";
-		cout << R[i];
-	}
-	cout << endl << endl << endl;
+//	for(int i = 0; i < 32; i++)
+//	{
+//		if (!(i % 4))
+//			cout << " ";
+//		cout << R[i];
+//	}
+//	cout << endl << endl << endl;
 		
+	permutePC(R, ret_tab, 32, P);
+	//DEBUG
+//	for (int i = 0; i < 32; i++)
+//	{
+//		if (!(i % 4))
+//			cout << " ";
+//		cout << ret_tab[i];
+//	}
+//	cout << endl << endl << endl;
+
 }
 
 
 
 
 
-
+void reverse(int L[], int R[], int tab_length, int ret_tab[])
+{
+	for (int i = 0; i < tab_length; i++)
+	{
+		ret_tab[i] = R[i];
+		ret_tab[i + tab_length] = L[i];
+	}
+}
 
 void messageEncode(int message_binary[], int message_size, int K[][48])
 {
@@ -569,6 +604,14 @@ void messageEncode(int message_binary[], int message_size, int K[][48])
 		f(prev_R, K[i], tmp_f);
 		xor(prev_L, tmp_f, 32, R);
 
+		//DEBUG
+//		for(int i = 0; i < 32; i++)
+//		{
+//			if (!(i % 4))
+//				cout << " ";
+//			cout << R[i];
+//		}
+//		cout << endl << endl << endl;
 
 		//przepisanie R i L do prev_R i prev_L
 		for(int i = 0; i < message_size / 2; i++)
@@ -576,6 +619,18 @@ void messageEncode(int message_binary[], int message_size, int K[][48])
 			prev_L[i] = L[i];
 			prev_R[i] = R[i];
 		}
+	}
+
+
+
+	int msg[64];
+	reverse(L, R, 32, msg);
+	//DEBUG
+	for (int i = 0; i < 64; i++)
+	{
+		if (!(i % 8))
+			cout << " ";
+		cout << msg[i];
 	}
 
 }
