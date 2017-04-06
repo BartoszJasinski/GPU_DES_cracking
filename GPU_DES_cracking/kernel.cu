@@ -128,6 +128,45 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 //}
 
 ////////////////////////////////////////////////////
+//int S1[4][16] = { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
+//{ 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8 },
+//{ 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
+//{ 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } };
+//
+//int S2[4][16] = { { 15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10 },
+//{ 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
+//{ 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, },
+//{ 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } };
+//
+//int S3[4][16] = { { 10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8 },
+//{ 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
+//{ 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
+//{ 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } };
+//
+//int S4[4][16] = { { 7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15 },
+//{ 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9 },
+//{ 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4 },
+//{ 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14 } };
+//
+//int S5[4][16] = { { 2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9 },
+//{ 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6 },
+//{ 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14 },
+//{ 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3 } };
+//
+//int S6[4][16] = { { 12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11 },
+//{ 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8 },
+//{ 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6 },
+//{ 4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } };
+//
+//int S7[4][16] = { { 4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1 },
+//{ 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
+//{ 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
+//{ 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } };
+//
+//int S8[4][16] = { { 13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7 },
+//{ 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
+//{ 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
+//{ 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } };
 
 
 int PC_1[56] = { 56, 48, 40, 32, 24, 16, 8, 0,
@@ -169,45 +208,39 @@ int E[] = { 31, 0, 1, 2, 3, 4,
 23, 24, 25, 26, 27, 28,
 27, 28, 29, 30, 31, 0 };
 
-int S1[4][16] = { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
+int S[8][4][16] = { { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
 {0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8},
 {4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
-{15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } };
-
-int S2[4][16] = { {15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10},
+{15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } }, 
+	{ {15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10},
 {3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
 {0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, },
-{13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } };
-
-int S3[4][16] = { {10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8},
+{13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } }, 
+	{ {10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8},
 {13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
 {13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
-{1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } };
-
-int S4[4][16] = { {7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15},
+{1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } }, 
+	{ {7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15},
 {13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9},
 {10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4},
-{3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14} };
-
-int S5[4][16] = { {2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9},
+{3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14} }, 
+	{ {2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9},
 {14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6},
 {4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14},
-{11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3} };
-
-int S6[4][16] = { {12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11},
+{11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3} }, 
+	{ {12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11},
 {10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8 },
 {9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6 },
-{4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } };
-
-int S7[4][16] = { {4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1},
+{4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } },
+	{ {4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1},
 {13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
 {1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
-{6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } };
-
-int S8[4][16] = { {13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7},
+{6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } },
+	{ {13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7},
 {1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
 {7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
-{2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } };
+{2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } }
+};
 
 void fun()
 {
@@ -382,6 +415,31 @@ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size,
 
 }
 
+void decimal2Binary(int decimal_int, int binary_int[], int run_number)
+{
+	int remainder;
+
+	if (decimal_int <= 1) {
+		binary_int[run_number] = decimal_int;
+		return;
+	}
+
+	remainder = decimal_int % 2;
+	decimal2Binary(decimal_int >> 1, binary_int, run_number + 1);
+	binary_int[run_number] = remainder;
+}
+
+void reverseTab(int tab[], int tab_length)
+{
+	for (int i = 0; i < tab_length / 2; i++)
+	{
+		int tmp = tab[i];
+		tab[i] = tab[tab_length - i - 1];
+		tab[tab_length - i - 1] = tmp;
+
+	}
+}
+
 void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 {
 	for(int i = 0; i < key_size; i++)
@@ -407,12 +465,12 @@ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 }
 
 //-->
-long long binary2Decimal(int integer[], int tab_length)
+long long binary2Decimal(int binary_int[], int tab_length)
 {
 	string int_string = "";
 
 	for (int i = 0; i < tab_length; i++)
-		int_string += to_string(integer[i]);
+		int_string += to_string(binary_int[i]);
 	stringstream ss;
 	ss << int_string;
 	string str = ss.str();
@@ -425,8 +483,26 @@ void f(int R[], int K[], int ret_tab[])
 {
 	int R_expanded[48];
 	expand(R, R_expanded, E, 48);
+	//DEBUG
+//	for (int i = 0; i < 48; i++)
+//	{
+//		if (!(i % 6))
+//			cout << " ";
+//		cout << R_expanded[i];
+//	}
+//	cout << endl << endl << endl;
+	
 	int xored[48];
-	xor (K, R, 48, xored);
+	xor (K, R_expanded, 48, xored);
+	//DEBUG
+//	for(int i = 0; i < 48; i++)
+//	{
+//		if (!(i % 6))
+//			cout << " ";
+//		cout << xored[i];
+//	}
+//	cout << endl << endl << endl;
+
 
 	for(int i = 0; i < 8; i++)
 	{
@@ -438,9 +514,25 @@ void f(int R[], int K[], int ret_tab[])
 		column[2] = xored[6 * i + 3];
 		column[3] = xored[6 * i + 4];
 
-		S1[binary2Decimal(row, 4)][binary2Decimal(column, 4)];
+		int chunk_length = 4;
+		int R_chunk[4] = {0, 0, 0, 0};
+		decimal2Binary(S[i][binary2Decimal(row, 4)][binary2Decimal(column, 4)], R_chunk, 0);
+		reverseTab(R_chunk, chunk_length);
+		for(int j = 0; j < chunk_length; j++)
+		{
+			R[4 * i + j] = R_chunk[j];
+		}
+
 	}
 
+	//DEBUG
+	for(int i = 0; i < 32; i++)
+	{
+		if (!(i % 4))
+			cout << " ";
+		cout << R[i];
+	}
+	cout << endl << endl << endl;
 		
 }
 
@@ -622,6 +714,7 @@ string desEncyption(int message_binary[], int message_size,int key_binary[], int
 //MESSAGE AFTER IP
 //1100110000000000110011001111111111110000101010101111000010101010
 
+
 int main()
 {
 	//TESTING
@@ -645,8 +738,44 @@ int main()
 //	cout << str2.size() << endl;
 //	cout << str2.size() * CHAR_BIT << endl;
 	//TESTING
+//	int binary_int[4];
+//	decimal2Binary(13, binary_int, 0);
+//	reverseTab(binary_int, 4);
+//	cout << binary_int[0] << binary_int[1] << binary_int[2] << binary_int[3] << endl;
 
 
+
+//	int decimal_int = 13;
+//	stringstream ss;
+//	ss << decimal_int;
+//	string str = ss.str();
+//	unsigned long long value = std::stoull(str, 0, 10);
+//	cout << value << endl;
+//	void decimal2Binary(int decimal_int) {
+//		int remainder;
+//
+//		if (decimal_int <= 1) {
+//			cout << decimal_int;
+//			return;
+//		}
+//
+//		remainder = decimal_int % 2;
+//		decimal2Binary(decimal_int >> 1);
+//		cout << remainder;
+//	}
+
+//	int row[] = { 0,0,0, 1 }, column[] = { 1, 1, 0, 1 };
+//	int R[4];
+//	int chunk_length = 4;
+//	int R_chunk[4] = { 0, 0, 0, 0 };
+//	decimal2Binary(S[0][binary2Decimal(row, 4)][binary2Decimal(column, 4)], R_chunk, 0);
+//	reverseTab(R_chunk, chunk_length);
+//	for (int j = 0; j < chunk_length; j++)
+//	{
+//		R[ j] = R_chunk[j];
+//	}
+//
+//	cout << R[0] << R[1] << R[2] << R[3] << endl;
 
 	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
 	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
@@ -751,41 +880,41 @@ int main()
 
 
 
-//int binary2Decimal(int integer[])
+//int binary2Decimal(int binary_int[])
 //{
-//	if (integer[0] == 0 && integer[1] == 0 && integer[2] == 0 && integer[3] == 0)
+//	if (binary_int[0] == 0 && binary_int[1] == 0 && binary_int[2] == 0 && binary_int[3] == 0)
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return ;
-//	else if (integer[0] == && integer[1] == && integer[2] == && integer[3] == )
+//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
 //		return;
 //
 //		return -1000500;
