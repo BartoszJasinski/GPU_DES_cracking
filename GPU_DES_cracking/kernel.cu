@@ -8,6 +8,9 @@
 #include <bitset>
 #include <sstream>
 #include <stdlib.h>
+#include <vector>
+
+typedef unsigned char BYTE;
 
 using namespace std;
 
@@ -207,14 +210,14 @@ int E[] = { 31, 0, 1, 2, 3, 4,
 19, 20, 21, 22, 23, 24,
 23, 24, 25, 26, 27, 28,
 27, 28, 29, 30, 31, 0 };
-
+//sprawdziæ s box
 int S[8][4][16] = { { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
 {0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8},
 {4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
 {15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } }, 
 	{ {15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10},
 {3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
-{0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, },
+{0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15 },
 {13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } }, 
 	{ {10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8},
 {13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
@@ -318,13 +321,13 @@ void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 	}
 }
 
-//bitset bytesToBitset<int numBytes>(byte *data)
+//bitset bytesToBitset<int numBytes>(byte *bytes)
 //{
 //	std::bitset<numBytes * CHAR_BIT> b;
 //
 //	for (int i = 0; i < numBytes; ++i)
 //	{
-//		byte cur = data[i];
+//		byte cur = bytes[i];
 //		int offset = i * CHAR_BIT;
 //
 //		for (int bit = 0; bit < CHAR_BIT; ++bit)
@@ -392,15 +395,15 @@ void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 //
 
 //template<int numBytes>
-//bitset<numBytes * CHAR_BIT>bytesToBitset(char const *data)
+//bitset<numBytes * CHAR_BIT>bytesToBitset(char const *bytes)
 //{
-////	char const *data = key_binary_ret.c_str();
-//	bitset<numBytes * CHAR_BIT> b = *data;
+////	char const *bytes = key_binary_ret.c_str();
+//	bitset<numBytes * CHAR_BIT> b = *bytes;
 //
 //	for (int i = 1; i < numBytes; ++i)
 //	{
 //		b <<= CHAR_BIT;  // Move to next bit in array
-//		b |= data[i];    // Set the lowest CHAR_BIT bits
+//		b |= bytes[i];    // Set the lowest CHAR_BIT bits
 //	}
 //
 //	return b;
@@ -577,7 +580,7 @@ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 	}
 }
 
-void messageEncode(int message_binary[], int message_size, int K[][48])
+void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
 {
 	int L[32], R[32];
 	for(int i = 0; i < message_size / 2; i++)
@@ -598,10 +601,19 @@ void messageEncode(int message_binary[], int message_size, int K[][48])
 	for(int i = 0; i < 16; i++)
 	{	
 		for (int j = 0; j < message_size / 2; j++)
-			L[j] = prev_R[i];
+			L[j] = prev_R[j];
 
 		int tmp_f[32];
 		f(prev_R, K[i], tmp_f);
+		//DEBUG
+//		for (int i = 0; i < 32; i++)
+//		{
+//			if (!(i % 4))
+//				cout << " ";
+//			cout << tmp_f[i];
+//		}
+//		cout << endl << endl << endl;
+
 		xor(prev_L, tmp_f, 32, R);
 
 		//DEBUG
@@ -626,18 +638,32 @@ void messageEncode(int message_binary[], int message_size, int K[][48])
 	int msg[64];
 	reverse(L, R, 32, msg);
 	//DEBUG
-	for (int i = 0; i < 64; i++)
-	{
-		if (!(i % 8))
-			cout << " ";
-		cout << msg[i];
-	}
+//	for (int i = 0; i < 64; i++)
+//	{
+//		if (!(i % 8))
+//			cout << " ";
+//		cout << msg[i];
+//	}
 
-}
+	
+	permutePC(msg, msg_ret, 64, IP_1);
+	//DEBUG
+//	for(int i = 0; i < 64; i++)
+//	{
+//		if (!(i % 8))
+//			cout << " ";
+//		cout << msg_ret[i];
+//	}	
+
+
+}	 
+
+
+
 
 
 //key_binary_ret should be 64 bit long
-string desEncyption(int message_binary[], int message_size,int key_binary[], int key_size)
+void desEncyption(int message_binary[], int message_size,int key_binary[], int key_size, int msg_ret[])
 {
 	int des_block_size_bytes = 8;
 	int des_block_size_bits = 64;
@@ -689,7 +715,6 @@ string desEncyption(int message_binary[], int message_size,int key_binary[], int
 		createSubkeys(subkeys[i], sizeof(key_binary_ret) / sizeof(key_binary_ret[0]), C, D, sizeof(C) / sizeof(C[0]), i);
 		appendKeys(C, D, subkey_size, subkeys[i + 1]);
 		//DEBUG
-
 //		for(int i = 0; i < subkeys_number; i++)
 //			for(int j = 0; j < 56; j++)
 //				cout << 
@@ -725,12 +750,97 @@ string desEncyption(int message_binary[], int message_size,int key_binary[], int
 	//DEBUG
 //	for(int i = 0; i < message_size; i++)
 //		cout << message_binary_ret[i];
+	messageEncode(message_binary_ret, message_size, K, msg_ret);
 
-	messageEncode(message_binary_ret, message_size, K);
+}
+
+
+void bytes2Bits(vector<BYTE> bytes, int bits[])
+{
+//	while(bytes.begin())
+//	{
+//		
+//	}
+	for(int i = 0; i < bytes.size(); i++)
+	{
+		BYTE cur = bytes[i];
+		int offset = i * CHAR_BIT;
+
+		for (int bit = 0; bit < CHAR_BIT; bit++, offset++)
+		{
+			bits[offset] = cur & 1;
+			cur >>= 1;  // Move to next bit in array
+		}
+	}
+
+	/////
+//	std::bitset<numBytes * CHAR_BIT> b;
+//
+//	for (int i = 0; i < numBytes; ++i)
+//	{
+//		BYTE cur = bytes[i];
+//		int offset = i * CHAR_BIT;
+//
+//		for (int bit = 0; bit < CHAR_BIT; ++bit)
+//		{
+//			b[offset] = cur & 1;
+//			++offset;   // Move to next bit in b
+//			cur >>= 1;  // Move to next bit in array
+//		}
+//	}
+
+}
+
+vector<BYTE> hex2Byte(string string_hex)
+{
+	stringstream converter;
+	istringstream istringstream_hex(string_hex);
+	vector<BYTE> bytes;
+
+	string word;
+	while (istringstream_hex >> word)
+	{
+		BYTE temp;
+		converter << std::hex << word;
+		converter >> temp;
+		bytes.push_back(temp);
+	}
+
+	return bytes;
+}
+
+enum DesStringBase
+{
+	Decimal, 
+	Hex,
+	Binary//not implemented 
+};
+
+string desEncyption(string message2Encrypt_hex, string key_hex, DesStringBase base)
+{
+	if(base == Decimal)
+	{
+		//TODO implement decimal to hex
+	}
+
+	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1 };
+	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+	int msg_ret[64];
+	desEncyption(message_binary, sizeof(message_binary) / sizeof(message_binary[0]), key_binary, sizeof(key_binary) / sizeof(key_binary[0]), msg_ret);
+	
+	//DEBUG
+//	for (int i = 0; i < 64; i++)
+//	{
+//		if (!(i % 8))
+//			cout << " ";
+//		cout << msg_ret[i];
+//	}
 
 	return "NOT IMPLEMENTED";
 }
 
+
+//Shifts
 //11110000110011001010101011110101010101100110011110001111
 //11100001100110010101010111111010101011001100111100011110
 //11000011001100101010101111110101010110011001111000111101
@@ -749,6 +859,7 @@ string desEncyption(int message_binary[], int message_size,int key_binary[], int
 //11111000011001100101010101111010101010110011001111000111
 //11110000110011001010101011110101010101100110011110001111
 
+//K
 //000110110000001011101111111111000111000001110010
 //011110011010111011011001110110111100100111100101
 //010101011111110010001010010000101100111110011001
@@ -765,6 +876,7 @@ string desEncyption(int message_binary[], int message_size,int key_binary[], int
 //010111110100001110110111111100101110011100111010
 //101111111001000110001101001111010011111100001010
 //110010110011110110001011000011100001011111110101
+
 
 //MESSAGE AFTER IP
 //1100110000000000110011001111111111110000101010101111000010101010
@@ -801,9 +913,9 @@ int main()
 
 
 //	int decimal_int = 13;
-//	stringstream ss;
-//	ss << decimal_int;
-//	string str = ss.str();
+//	stringstream string_hex;
+//	string_hex << decimal_int;
+//	string str = string_hex.str();
 //	unsigned long long value = std::stoull(str, 0, 10);
 //	cout << value << endl;
 //	void decimal2Binary(int decimal_int) {
@@ -832,10 +944,32 @@ int main()
 //
 //	cout << R[0] << R[1] << R[2] << R[3] << endl;
 
-	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
-	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
-	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
-	string cypherText = desEncyption(message_binary, sizeof(message_binary) / sizeof(message_binary[0]), key_binary, sizeof(key_binary) / sizeof(key_binary[0]));
+	string message = "0123456789ABCDEF";
+	string string_hex("01 23 45 67 89 AB CD EF");
+	vector<BYTE> bytes = hex2Byte(string_hex);
+
+	for (int i = 0; i < bytes.size(); i++)
+	{
+		if (!(i % 4))
+			cout << " ";
+		cout << bytes[i];
+	}
+
+
+	int bits[16 * CHAR_BIT / 2];
+	bytes2Bits(bytes, bits);
+//
+//	for(int i = 0; i < 16 * CHAR_BIT / 2; i++)
+//	{
+//		if (!(i % 4))
+//			cout << " ";
+//		cout << bits[i];
+//	}
+
+//	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+//	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
+//	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+//	string cypherText = desEncyption(message, key);
 
 
 	//OLD
@@ -852,10 +986,10 @@ int main()
 //	
 //	//	bytesToBitset(key_hex);
 //
-////	stringstream ss;
-///	ss << key_hex;
+////	stringstream string_hex;
+///	string_hex << key_hex;
 ///	string test = "0";
-///	bytesToBitset<16>(ss.str());
+///	bytesToBitset<16>(string_hex.str());
 ///	desEncyption(message, key_binary_ret);
 //	
 ////	char const *c_key = key_binary_ret.c_str();
@@ -975,3 +1109,64 @@ int main()
 //		return -1000500;
 //}
 //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////
+//
+//7 13 14 3 0 6 9 10 1 2 8 5 11 12 4 15
+//13 8 11 5 6 15 0 3 4 7 2 12 1 10 14 9
+//10 6 9 0 12 11 7 13 15 1 3 14 5 2 8 4
+//3 15 0 6 10 1 13 8 9 4 5 11 12 7 2 14
+//2 12 4 1 7 10 11 6 8 5 3 15 13 0 14 9
+//14 11 2 12 4 7 13 1 5 0 15 10 3 9 8 6
+//4 2 1 11 10 13 7 8 15 9 12 5 6 3 0 14
+//11 8 12 7 1 14 2 13 6 15 0 9 10 4 5 3
+//12 1 10 15 9 2 6 8 0 13 3 4 14 7 5 11
+//10 15 4 2 7 12 9 5 6 1 13 14 0 11 3 8
+//9 14 15 5 2 8 12 3 7 0 4 10 1 13 11 6
+//4 3 2 12 9 5 15 10 11 14 1 7 6 0 8 13
+//4 11 2 14 15 0 8 13 3 12 9 7 5 10 6 1
+//13 0 11 7 4 9 1 10 14 3 5 12 2 15 8 6
+//1 4 11 13 12 3 7 14 10 15 6 8 0 5 9 2
+//6 11 13 8 1 4 10 7 9 5 0 15 14 2 3 12
+//13 2 8 4 6 15 11 1 10 9 3 14 5 0 12 7
+//1 15 13 8 10 3 7 4 12 5 6 11 0 14 9 2
+//7 11 4 1 9 12 14 2 0 6 10 13 15 3 5 8
+//2 1 14 7 4 10 8 13 15 12 9 0 3 5 6 11
+
+
+
+
+//
+//7 13 14 3 0 6 9 10 1 2 8 5 11 12 4 15
+//13 8 11 5 6 15 0 3 4 7 2 12 1 10 14 9
+//10 6 9 0 12 11 7 13 15 1 3 14 5 2 8 4
+//3 15 0 6 10 1 13 8 9 4 5 11 12 7 2 14
+//2 12 4 1 7 10 11 6 8 5 3 15 13 0 14 9
+//14 11 2 12 4 7 13 1 5 0 15 10 3 9 8 6
+//4 2 1 11 10 13 7 8 15 9 12 5 6 3 0 14
+//11 8 12 7 1 14 2 13 6 15 0 9 10 4 5 3
+//12 1 10 15 9 2 6 8 0 13 3 4 14 7 5 11
+//10 15 4 2 7 12 9 5 6 1 13 14 0 11 3 8
+//9 14 15 5 2 8 12 3 7 0 4 10 1 13 11 6
+//4 3 2 12 9 5 15 10 11 14 1 7 6 0 8 13
+//4 11 2 14 15 0 8 13 3 12 9 7 5 10 6 1
+//13 0 11 7 4 9 1 10 14 3 5 12 2 15 8 6
+//1 4 11 13 12 3 7 14 10 15 6 8 0 5 9 2
+//6 11 13 8 1 4 10 7 9 5 0 15 14 2 3 12
+//13 2 8 4 6 15 11 1 10 9 3 14 5 0 12 7
+//1 15 13 8 10 3 7 4 12 5 6 11 0 14 9 2
+//7 11 4 1 9 12 14 2 0 6 10 13 15 3 5 8
+//2 1 14 7 4 10 8 13 15 12 9 0 3 5 6 11
