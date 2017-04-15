@@ -513,10 +513,10 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 //		cout << endl << endl << endl;
 
 		//przepisanie R i L do prev_R i prev_L
-		for(int i = 0; i < message_size / 2; i++)
+		for(int j = 0; j < message_size / 2; j++)
 		{
-			prev_L[i] = L[i];
-			prev_R[i] = R[i];
+			prev_L[j] = L[j];
+			prev_R[j] = R[j];
 		}
 	}
 
@@ -865,8 +865,8 @@ int main()
 {
 
 	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
-	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
-	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+//	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
+//	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
 	string cypherText = desEncyption(message, key, DesStringBase::Hex);
 
 	return 0;
