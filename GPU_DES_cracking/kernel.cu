@@ -9,6 +9,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include <vector>
+#include <iomanip>
 
 typedef unsigned char BYTE;
 
@@ -816,26 +817,140 @@ enum DesStringBase
 	Binary//not implemented 
 };
 
-string desEncyption(string message2Encrypt_hex, string key_hex, DesStringBase base)
+const char* hex_char_to_bin(char c)
 {
+	// TODO handle default / error
+	switch (toupper(c))
+	{
+	case '0': return "0000";
+	case '1': return "0001";
+	case '2': return "0010";
+	case '3': return "0011";
+	case '4': return "0100";
+	case '5': return "0101";
+	case '6': return "0110";
+	case '7': return "0111";
+	case '8': return "1000";
+	case '9': return "1001";
+	case 'A': return "1010";
+	case 'B': return "1011";
+	case 'C': return "1100";
+	case 'D': return "1101";
+	case 'E': return "1110";
+	case 'F': return "1111";
+	}
+}
+
+std::string hex2Bin(const std::string& hex)
+{
+	// TODO use a loop from <algorithm> or smth
+	std::string bin;
+	for (unsigned i = 0; i != hex.length(); ++i)
+		bin += hex_char_to_bin(hex[i]);
+	return bin;
+}
+
+vector<int> str2Int(string& str_int)
+{
+	vector<int> int_vector;
+	for (int i = 0; i < str_int.size(); i++)
+		int_vector.push_back(str_int.c_str()[i] - '0');
+
+	return int_vector;
+}
+
+void bin2Hex(string binary)
+{
+	long int longint = 0;
+	for (int i = 0; i < binary.size(); i++)
+		longint += (binary[binary.size() - i - 1] - 48) * pow(2, i);
+	cout << setbase(16);
+	cout << longint;
+
+}
+
+string getHexStringFromBinaryString(string sHex)
+{
+	string sReturn = "";
+	int bit_length = 4;
+	const string const bins[] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
+		"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };
+	for (int i = 0; i < sHex.length() / bit_length; ++i)
+	{
+		string s = sHex.substr(bit_length * i, bit_length);
+
+		if(s == bins[0])
+			 sReturn.append("0");
+		if (s == bins[1])
+			 sReturn.append("1");
+		if (s == bins[2])
+			sReturn.append("2");
+		if (s == bins[3])
+			sReturn.append("3");
+		if (s == bins[4])
+			sReturn.append("4");
+		if (s == bins[5])
+			 sReturn.append("5");
+		if (s == bins[6])
+			 sReturn.append("6");
+		if (s == bins[7])
+			sReturn.append("7");
+		if (s == bins[8])
+			sReturn.append("8");
+		if (s == bins[9])
+			sReturn.append("9");
+		if (s == bins[10])
+			sReturn.append("A");
+		if (s == bins[11])
+			sReturn.append("B");
+		if (s == bins[12])
+			 sReturn.append("C");
+		if (s == bins[13])
+			 sReturn.append("D");
+		if (s == bins[14])
+			sReturn.append("E");
+		if (s == bins[15])
+			 sReturn.append("F");
+		}
+
+	return sReturn;
+
+}
+
+
+string desEncyption(string message2Encrypt, string key, DesStringBase base)
+{
+	//TODO implement different bases
+	string str_message = hex2Bin(message2Encrypt);
+	vector<int> message_binary = str2Int(str_message);
+	string str_key = hex2Bin(key);
+	vector<int> key_binary = str2Int(str_key);
+
 	if(base == Decimal)
 	{
 		//TODO implement decimal to hex
 	}
 
-	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1 };
-	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+//	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1 };
+//	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
 	int msg_ret[64];
-	desEncyption(message_binary, sizeof(message_binary) / sizeof(message_binary[0]), key_binary, sizeof(key_binary) / sizeof(key_binary[0]), msg_ret);
-	
+	desEncyption(&message_binary[0], message_binary.size(), &key_binary[0], key.size(), msg_ret);
 	//DEBUG
-//	for (int i = 0; i < 64; i++)
-//	{
-//		if (!(i % 8))
-//			cout << " ";
-//		cout << msg_ret[i];
-//	}
+	//	for (int i = 0; i < 64; i++)
+	//	{
+	//		if (!(i % 8))
+	//			cout << " ";
+	//		cout << msg_ret[i];
+	//	}
 
+	string binary;
+	for (int i = 0; i < 64; i++)
+		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
+	//DEBUG
+	//cout << binary;
+
+	cout << getHexStringFromBinaryString(binary);
+	
 	return "NOT IMPLEMENTED";
 }
 
@@ -880,6 +995,10 @@ string desEncyption(string message2Encrypt_hex, string key_hex, DesStringBase ba
 
 //MESSAGE AFTER IP
 //1100110000000000110011001111111111110000101010101111000010101010
+
+
+
+
 
 
 int main()
@@ -943,38 +1062,40 @@ int main()
 //	}
 //
 //	cout << R[0] << R[1] << R[2] << R[3] << endl;
-
-	string message = "0123456789ABCDEF";
-	string string_hex("01 23 45 67 89 AB CD EF");
-	vector<BYTE> bytes = hex2Byte(string_hex);
-
-	for (int i = 0; i < bytes.size(); i++)
-	{
-		if (!(i % 4))
-			cout << " ";
-		cout << bytes[i];
-	}
-
-
-	int bits[16 * CHAR_BIT / 2];
-	bytes2Bits(bytes, bits);
 //
-//	for(int i = 0; i < 16 * CHAR_BIT / 2; i++)
-//	{
-//		if (!(i % 4))
-//			cout << " ";
-//		cout << bits[i];
-//	}
+//	string message = "0123456789ABCDEF";
+//	string string_hex("01 23 45 67 89 AB CD EF");
+////	vector<BYTE> bytes = hex2Byte(string_hex);
+////	
+//////	for (int i = 0; i < bytes.size(); i++)
+//////	{
+//////		if (!(i % 4))
+//////			cout << " ";
+//////		cout << bytes[i];
+//////	}
+////
+////
+////	int bits[8 * CHAR_BIT];	
+////	bytes2Bits(bytes, bits);
+////
+////	for(int i = 0; i < 8 * CHAR_BIT / 2; i++)
+////	{
+////		if (!(i % 4))
+////			cout << " ";
+////		cout << bits[i];
+////	}
 
-//	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
-//	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
-//	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
-//	string cypherText = desEncyption(message, key);
+
+
+	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
+	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+	string cypherText = desEncyption(message, key, DesStringBase::Hex);
 
 
 	//OLD
-//	int key_hex = 0x133457799BBCDFF1;
-///	int* bits = get_bits(key_hex, sizeof(key_hex) * CHAR_BIT);
+//	int key = 0x133457799BBCDFF1;
+///	int* bits = get_bits(key, sizeof(key) * CHAR_BIT);
 ///	
 ///	int cntr = 0;
 ///	while(bits[cntr])
@@ -984,10 +1105,10 @@ int main()
 ///			cout << " ";
 ///	}
 //	
-//	//	bytesToBitset(key_hex);
+//	//	bytesToBitset(key);
 //
 ////	stringstream string_hex;
-///	string_hex << key_hex;
+///	string_hex << key;
 ///	string test = "0";
 ///	bytesToBitset<16>(string_hex.str());
 ///	desEncyption(message, key_binary_ret);
