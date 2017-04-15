@@ -211,7 +211,7 @@ int E[] = { 31, 0, 1, 2, 3, 4,
 19, 20, 21, 22, 23, 24,
 23, 24, 25, 26, 27, 28,
 27, 28, 29, 30, 31, 0 };
-//sprawdziæ s box
+
 int S[8][4][16] = { { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
 {0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8},
 {4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
@@ -291,21 +291,6 @@ void printArray(T(&theArray)[N][M], int char_endl_nbr) {
 }
 
 
-//template< typename T, size_t N, size_t M >
-//void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
-//	for (int x = 0; x < N; x++)
-//	{
-//		for (int y = 0; y < M; y++)
-//		{
-//			cout << theArray[x][y];
-//			if (y == char_endl_nbr)
-//				cout << endl;
-//			if (!(y % 6))
-//				cout << " ";
-//		}
-//		cout << endl;
-//	}
-//}
 template< typename T, size_t N, size_t M >
 void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 	for (int x = 0; x < N; x++)
@@ -315,102 +300,10 @@ void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 			cout << theArray[x][y];
 			if (y == char_endl_nbr)
 				cout << endl;
-//			if (!(y % 6))
-//				cout << " ";
 		}
 		cout << endl;
 	}
 }
-
-//bitset bytesToBitset<int numBytes>(byte *bytes)
-//{
-//	std::bitset<numBytes * CHAR_BIT> b;
-//
-//	for (int i = 0; i < numBytes; ++i)
-//	{
-//		byte cur = bytes[i];
-//		int offset = i * CHAR_BIT;
-//
-//		for (int bit = 0; bit < CHAR_BIT; ++bit)
-//		{
-//			b[offset] = cur & 1;
-//			++offset;   // Move to next bit in b
-//			cur >>= 1;  // Move to next bit in array
-//		}
-//	}
-//
-//	return b;
-//}
-
-//
-//template<int numBytes>
-//void bytesToBitset(string key_binary_ret)
-//{
-////	unsigned char c = 'a';
-//
-//	char const *c_key = key_binary_ret.c_str();
-//
-//	for (int i = 0; i < key_binary_ret.size(); i++)
-//	{
-//		for (int j = 0; j < 8; j++)
-//		{
-//
-//			std::cout << ((c_key[i] >> j) & 1);
-//		}
-//		cout << " ";
-//	}
-//	
-//}
-//
-//void bytesToBitset(string key_binary_ret)
-//{
-//	//	unsigned char c = 'a';
-//
-//	char const *c_key = key_binary_ret.c_str();
-//
-//	for (int i = 0; i < key_binary_ret.size(); i++)
-//	{
-//		for (int j = 0; j < 8; j++)
-//		{
-//
-//			std::cout << ((c_key[i] >> j) & 1);
-//		}
-//		cout << " ";
-//	}
-//
-//}
-//
-//int *get_bits(int n, int bitswanted) {
-//	int *bits = (int *)malloc(sizeof(int) * bitswanted);
-//
-//	int k;
-//	for (k = 0; k<bitswanted; k++) {
-//		int mask = 1 << k;
-//		int masked_n = n & mask;
-//		int thebit = masked_n >> k;
-//		bits[k] = thebit;
-//	}
-//
-//	return bits;
-//}
-//
-
-//template<int numBytes>
-//bitset<numBytes * CHAR_BIT>bytesToBitset(char const *bytes)
-//{
-////	char const *bytes = key_binary_ret.c_str();
-//	bitset<numBytes * CHAR_BIT> b = *bytes;
-//
-//	for (int i = 1; i < numBytes; ++i)
-//	{
-//		b <<= CHAR_BIT;  // Move to next bit in array
-//		b |= bytes[i];    // Set the lowest CHAR_BIT bits
-//	}
-//
-//	return b;
-//}
-//
-//
 
 void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, int PC[])
 {
@@ -440,14 +333,12 @@ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size,
 
 void decimal2Binary(int decimal_int, int binary_int[], int run_number)
 {
-	int remainder;
-
 	if (decimal_int <= 1) {
 		binary_int[run_number] = decimal_int;
 		return;
 	}
 
-	remainder = decimal_int % 2;
+	int remainder = decimal_int % 2;
 	decimal2Binary(decimal_int >> 1, binary_int, run_number + 1);
 	binary_int[run_number] = remainder;
 }
@@ -569,9 +460,6 @@ void f(int R[], int K[], int ret_tab[])
 }
 
 
-
-
-
 void reverse(int L[], int R[], int tab_length, int ret_tab[])
 {
 	for (int i = 0; i < tab_length; i++)
@@ -596,8 +484,6 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 		prev_L[i] = L[i];
 		prev_R[i] = R[i];
 	}
-
-
 
 	for(int i = 0; i < 16; i++)
 	{	
@@ -634,8 +520,6 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 		}
 	}
 
-
-
 	int msg[64];
 	reverse(L, R, 32, msg);
 	//DEBUG
@@ -645,7 +529,6 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 //			cout << " ";
 //		cout << msg[i];
 //	}
-
 	
 	permutePC(msg, msg_ret, 64, IP_1);
 	//DEBUG
@@ -655,7 +538,6 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 //			cout << " ";
 //		cout << msg_ret[i];
 //	}	
-
 
 }	 
 
@@ -758,10 +640,6 @@ void desEncyption(int message_binary[], int message_size,int key_binary[], int k
 
 void bytes2Bits(vector<BYTE> bytes, int bits[])
 {
-//	while(bytes.begin())
-//	{
-//		
-//	}
 	for(int i = 0; i < bytes.size(); i++)
 	{
 		BYTE cur = bytes[i];
@@ -773,22 +651,6 @@ void bytes2Bits(vector<BYTE> bytes, int bits[])
 			cur >>= 1;  // Move to next bit in array
 		}
 	}
-
-	/////
-//	std::bitset<numBytes * CHAR_BIT> b;
-//
-//	for (int i = 0; i < numBytes; ++i)
-//	{
-//		BYTE cur = bytes[i];
-//		int offset = i * CHAR_BIT;
-//
-//		for (int bit = 0; bit < CHAR_BIT; ++bit)
-//		{
-//			b[offset] = cur & 1;
-//			++offset;   // Move to next bit in b
-//			cur >>= 1;  // Move to next bit in array
-//		}
-//	}
 
 }
 
@@ -817,7 +679,7 @@ enum DesStringBase
 	Binary//not implemented 
 };
 
-const char* hex_char_to_bin(char c)
+const char* hexChar2Bin(char c)
 {
 	// TODO handle default / error
 	switch (toupper(c))
@@ -846,7 +708,7 @@ std::string hex2Bin(const std::string& hex)
 	// TODO use a loop from <algorithm> or smth
 	std::string bin;
 	for (unsigned i = 0; i != hex.length(); ++i)
-		bin += hex_char_to_bin(hex[i]);
+		bin += hexChar2Bin(hex[i]);
 	return bin;
 }
 
@@ -931,8 +793,6 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 		//TODO implement decimal to hex
 	}
 
-//	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1 };
-//	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
 	int msg_ret[64];
 	desEncyption(&message_binary[0], message_binary.size(), &key_binary[0], key.size(), msg_ret);
 	//DEBUG
@@ -1003,243 +863,14 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 
 int main()
 {
-	//TESTING
-//	char msg[] = { 'a' , '\0'};
-//	cout << msg << endl;
-//	cout << sizeof(msg) << endl;
-//	cout << sizeof(msg) * CHAR_BIT << endl;
-//	
-//	string str = "a";
-//	cout << endl << str << endl;
-//	cout << str.size() << endl;
-//	cout << str.size() * CHAR_BIT << endl;
-//
-//	
-//	int a = 0x0123456789ABCDEF;
-//	stringstream stream;
-//	stream << hex << a;
-//	string str2 = stream.str();
-//	cout << endl << str2 << endl;
-//	cout << hex << str2 << endl;
-//	cout << str2.size() << endl;
-//	cout << str2.size() * CHAR_BIT << endl;
-	//TESTING
-//	int binary_int[4];
-//	decimal2Binary(13, binary_int, 0);
-//	reverseTab(binary_int, 4);
-//	cout << binary_int[0] << binary_int[1] << binary_int[2] << binary_int[3] << endl;
-
-
-
-//	int decimal_int = 13;
-//	stringstream string_hex;
-//	string_hex << decimal_int;
-//	string str = string_hex.str();
-//	unsigned long long value = std::stoull(str, 0, 10);
-//	cout << value << endl;
-//	void decimal2Binary(int decimal_int) {
-//		int remainder;
-//
-//		if (decimal_int <= 1) {
-//			cout << decimal_int;
-//			return;
-//		}
-//
-//		remainder = decimal_int % 2;
-//		decimal2Binary(decimal_int >> 1);
-//		cout << remainder;
-//	}
-
-//	int row[] = { 0,0,0, 1 }, column[] = { 1, 1, 0, 1 };
-//	int R[4];
-//	int chunk_length = 4;
-//	int R_chunk[4] = { 0, 0, 0, 0 };
-//	decimal2Binary(S[0][binary2Decimal(row, 4)][binary2Decimal(column, 4)], R_chunk, 0);
-//	reverseTab(R_chunk, chunk_length);
-//	for (int j = 0; j < chunk_length; j++)
-//	{
-//		R[ j] = R_chunk[j];
-//	}
-//
-//	cout << R[0] << R[1] << R[2] << R[3] << endl;
-//
-//	string message = "0123456789ABCDEF";
-//	string string_hex("01 23 45 67 89 AB CD EF");
-////	vector<BYTE> bytes = hex2Byte(string_hex);
-////	
-//////	for (int i = 0; i < bytes.size(); i++)
-//////	{
-//////		if (!(i % 4))
-//////			cout << " ";
-//////		cout << bytes[i];
-//////	}
-////
-////
-////	int bits[8 * CHAR_BIT];	
-////	bytes2Bits(bytes, bits);
-////
-////	for(int i = 0; i < 8 * CHAR_BIT / 2; i++)
-////	{
-////		if (!(i % 4))
-////			cout << " ";
-////		cout << bits[i];
-////	}
-
-
 
 	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
 	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
 	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
 	string cypherText = desEncyption(message, key, DesStringBase::Hex);
 
-
-	//OLD
-//	int key = 0x133457799BBCDFF1;
-///	int* bits = get_bits(key, sizeof(key) * CHAR_BIT);
-///	
-///	int cntr = 0;
-///	while(bits[cntr])
-///	{
-///		cout << bits[cntr++];
-///		if (!(cntr % 8))
-///			cout << " ";
-///	}
-//	
-//	//	bytesToBitset(key);
-//
-////	stringstream string_hex;
-///	string_hex << key;
-///	string test = "0";
-///	bytesToBitset<16>(string_hex.str());
-///	desEncyption(message, key_binary_ret);
-//	
-////	char const *c_key = key_binary_ret.c_str();
-///	int c_key_size = 0;
-///	while (c_key[c_key_size])
-///	{
-///		c_key_size++;
-///	}
-///
-///	cout << c_key_size;
-//
-//
-////	cout << CHAR_BIT;
-//
-//	cout << key_binary_ret.size();
-//	bitset<17 * CHAR_BIT> bits = bytesToBitset<17>(key_binary_ret.c_str());
-//
-//	for (int i = 0; i < bits.count(); i++)
-//	{
-//		if (!(i % 8))
-//			cout << " ";
-//		cout << bits[i];
-//	}
-	//OLD
-
-
-
-
 	return 0;
-
 }
-
-
-
-////////
-////////
-////////
-//#include <string>
-//#include <bitset>
-//#include <type_traits>
-//
-//// SFINAE for safety. Sue me for putting it in a macro for brevity on the function
-//#define IS_INTEGRAL(T) typename std::enable_if< std::is_integral<T>::value >::type* = 0
-//
-////template<class T>
-////std::string integral_to_binary_string(T byte, IS_INTEGRAL(T))
-////{
-////	std::bitset<sizeof(T) * CHAR_BIT> bs(byte);
-////	return bs.to_string();
-////}
-//
-//template<class T>
-//std::string integral_to_binary_string(T* byte, IS_INTEGRAL(T))
-//{
-//	std::bitset<sizeof(T) * CHAR_BIT> map[16];  // each bitset has all 64 bits set to 0
-//
-//	for (int i = 0; i < 8; i++)
-//	{
-//		std::bitset<sizeof(unsigned char) * CHAR_BIT> bs(byte[i]);
-//		cout << bs.to_string();
-//		if (!(i % 2))
-//			cout << " ";
-//	}
-//	
-//	return "";
-//}
-//
-//int main() {
-//	unsigned char byte = 0x133457799BBCDFF1; // 0000 0011
-////	unsigned char byte_array[] = { 0x1, 0x3, 0x3, 0x4, 0x5, 0x7, 0x7, 0x9, 0x9, 0xB, 0xB, 0xC, 0xD, 0xF, 0xF, 0x1 };
-//	unsigned char byte_array[] = { 0x13, 0x34, 0x57, 0x79, 0x9B, 0xBC, 0xDF, 0xF1};
-//
-//	std::cout << integral_to_binary_string(byte_array);
-//	//std::cin.get();
-//}
-
-
-
-
-//int binary2Decimal(int binary_int[])
-//{
-//	if (binary_int[0] == 0 && binary_int[1] == 0 && binary_int[2] == 0 && binary_int[3] == 0)
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return ;
-//	else if (binary_int[0] == && binary_int[1] == && binary_int[2] == && binary_int[3] == )
-//		return;
-//
-//		return -1000500;
-//}
-//
-
-
-
-
-
-
-
-
-
-
 
 
 
