@@ -17,119 +17,6 @@ using namespace std;
 
 cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
-//__global__ void addKernel(int *c, const int *a, const int *b)
-//{
-//    int i = threadIdx.x;
-//    c[i] = a[i] + b[i];
-//}
-//
-//int main()
-//{
-//    const int arraySize = 5;
-//    const int a[arraySize] = { 1, 2, 3, 4, 5 };
-//    const int b[arraySize] = { 10, 20, 30, 40, 50 };
-//    int c[arraySize] = { 0 };
-//
-//    // Add vectors in parallel.
-//    cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "addWithCuda failed!");
-//        return 1;
-//    }
-//
-//    printf("{1,2,3,4,5} + {10,20,30,40,50} = {%d,%d,%d,%d,%d}\n",
-//        c[0], c[1], c[2], c[3], c[4]);
-//
-//    // cudaDeviceReset must be called before exiting in order for profiling and
-//    // tracing tools such as Nsight and Visual Profiler to show complete traces.
-//    cudaStatus = cudaDeviceReset();
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaDeviceReset failed!");
-//        return 1;
-//    }
-//
-//    return 0;
-//}
-//
-//// Helper function for using CUDA to add vectors in parallel.
-//cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
-//{
-//    int *dev_a = 0;
-//    int *dev_b = 0;
-//    int *dev_c = 0;
-//    cudaError_t cudaStatus;
-//
-//    // Choose which GPU to run on, change this on a multi-GPU system.
-//    cudaStatus = cudaSetDevice(0);
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
-//        goto Error;
-//    }
-//
-//    // Allocate GPU buffers for three vectors (two input, one output)    .
-//    cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaMalloc failed!");
-//        goto Error;
-//    }
-//
-//    cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaMalloc failed!");
-//        goto Error;
-//    }
-//
-//    cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaMalloc failed!");
-//        goto Error;
-//    }
-//
-//    // Copy input vectors from host memory to GPU buffers.
-//    cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaMemcpy failed!");
-//        goto Error;
-//    }
-//
-//    cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaMemcpy failed!");
-//        goto Error;
-//    }
-//
-//    // Launch a kernel on the GPU with one thread for each element.
-//    addKernel<<<1, size>>>(dev_c, dev_a, dev_b);
-//
-//    // Check for any errors launching the kernel
-//    cudaStatus = cudaGetLastError();
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
-//        goto Error;
-//    }
-//    
-//    // cudaDeviceSynchronize waits for the kernel to finish, and returns
-//    // any errors encountered during the launch.
-//    cudaStatus = cudaDeviceSynchronize();
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching addKernel!\n", cudaStatus);
-//        goto Error;
-//    }
-//
-//    // Copy output vector from GPU buffer to host memory.
-//    cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
-//    if (cudaStatus != cudaSuccess) {
-//        fprintf(stderr, "cudaMemcpy failed!");
-//        goto Error;
-//    }
-//
-//Error:
-//    cudaFree(dev_c);
-//    cudaFree(dev_a);
-//    cudaFree(dev_b);
-//    
-//    return cudaStatus;
-//}
 
 ////////////////////////////////////////////////////
 //int S1[4][16] = { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
@@ -684,22 +571,22 @@ const char* hexChar2Bin(char c)
 	// TODO handle default / error
 	switch (toupper(c))
 	{
-	case '0': return "0000";
-	case '1': return "0001";
-	case '2': return "0010";
-	case '3': return "0011";
-	case '4': return "0100";
-	case '5': return "0101";
-	case '6': return "0110";
-	case '7': return "0111";
-	case '8': return "1000";
-	case '9': return "1001";
-	case 'A': return "1010";
-	case 'B': return "1011";
-	case 'C': return "1100";
-	case 'D': return "1101";
-	case 'E': return "1110";
-	case 'F': return "1111";
+		case '0': return "0000";
+		case '1': return "0001";
+		case '2': return "0010";
+		case '3': return "0011";
+		case '4': return "0100";
+		case '5': return "0101";
+		case '6': return "0110";
+		case '7': return "0111";
+		case '8': return "1000";
+		case '9': return "1001";
+		case 'A': return "1010";
+		case 'B': return "1011";
+		case 'C': return "1100";
+		case 'D': return "1101";
+		case 'E': return "1110";
+		case 'F': return "1111";
 	}
 }
 
@@ -809,9 +696,7 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 	//DEBUG
 	//cout << binary;
 
-	cout << getHexStringFromBinaryString(binary);
-	
-	return "NOT IMPLEMENTED";
+	return getHexStringFromBinaryString(binary);
 }
 
 
@@ -858,20 +743,186 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 
 
 
+//int main()
+//{
+//	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+////	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
+////	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+//	time_t start = time(nullptr);
+//	for(int i = 0; i < 2000; i++)
+//		string cypherText = desEncyption(message, key, DesStringBase::Hex);
+//	time_t stop = time(nullptr);
+//
+//	cout << "\n\n\n" << difftime(stop, start);
+//
+//	return 0;
+//}
 
+vector<int> consecutiveKeyGenerator()
+{
+	vector<int> key;
+	for (int i = 0; i < 63; i++)
+		key.push_back(0);
+	key.push_back(1);
+	return key;
+}
 
+bool compareArrays(int message[], vector<int> cypherText)
+{
+	for (int i = 0; i < 64; i++)
+	{
+		if (message[i] != cypherText[i])
+			return false;
+	}
+
+	return true;
+}
+
+//__global__ 
+__host__ void crackDes(string message, string cyphertext)
+{
+	string str_message = hex2Bin(message);
+	vector<int> message_binary = str2Int(str_message);
+	vector<int> possible_key_binary = consecutiveKeyGenerator();
+	
+	string str_cyphertext = hex2Bin(cyphertext);
+	vector<int> cyphertext_binary = str2Int(str_cyphertext);
+
+	int msg_ret[64];
+	desEncyption(&message_binary[0], message_binary.size(), &possible_key_binary[0], 16, msg_ret);
+
+	if (compareArrays(msg_ret, cyphertext_binary))
+		for (int i = 0; i < 64; i++)
+			cout << possible_key_binary[i];
+	cout << "\n";
+	//DEBUG
+	//	for (int i = 0; i < 64; i++)
+	//	{
+	//		if (!(i % 8))
+	//			cout << " ";
+	//		cout << msg_ret[i];
+	//	}
+
+//	string binary;
+//	for (int i = 0; i < 64; i++)
+//		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
+	//DEBUG
+	//cout << binary;
+
+}
 
 int main()
 {
-
-	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
-//	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
-//	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+	string message = "0123456789ABCDEE", key = "0000000000000000";
 	string cypherText = desEncyption(message, key, DesStringBase::Hex);
+	//cout << cypherText << "\n";
+	crackDes(message, cypherText);
+
+
+
+//	const int arraySize = 5;
+//	const int a[arraySize] = { 1, 2, 3, 4, 5 };
+//	const int b[arraySize] = { 10, 20, 30, 40, 50 };
+//	int c[arraySize] = { 0 };
+//
+//	// Add vectors in parallel.
+//	cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "addWithCuda failed!");
+//		return 1;
+//	}
+//
+//
+//	// cudaDeviceReset must be called before exiting in order for profiling and
+//	// tracing tools such as Nsight and Visual Profiler to show complete traces.
+//	cudaStatus = cudaDeviceReset();
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaDeviceReset failed!");
+//		return 1;
+//	}
 
 	return 0;
 }
-
+//
+//// Helper function for using CUDA to add vectors in parallel.
+//cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
+//{
+//	int *dev_a = 0;
+//	int *dev_b = 0;
+//	int *dev_c = 0;
+//	cudaError_t cudaStatus;
+//
+//	// Choose which GPU to run on, change this on a multi-GPU system.
+//	cudaStatus = cudaSetDevice(0);
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
+//		goto Error;
+//	}
+//
+//	// Allocate GPU buffers for three vectors (two input, one output)    .
+//	cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaMalloc failed!");
+//		goto Error;
+//	}
+//
+//	cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaMalloc failed!");
+//		goto Error;
+//	}
+//
+//	cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaMalloc failed!");
+//		goto Error;
+//	}
+//
+//	// Copy input vectors from host memory to GPU buffers.
+//	cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaMemcpy failed!");
+//		goto Error;
+//	}
+//
+//	cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaMemcpy failed!");
+//		goto Error;
+//	}
+//
+//	// Launch a kernel on the GPU with one thread for each element.
+//	crackDes << <1, size >> >(dev_c, dev_a, dev_b);
+//
+//	// Check for any errors launching the kernel
+//	cudaStatus = cudaGetLastError();
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "crackDes launch failed: %s\n", cudaGetErrorString(cudaStatus));
+//		goto Error;
+//	}
+//
+//	// cudaDeviceSynchronize waits for the kernel to finish, and returns
+//	// any errors encountered during the launch.
+//	cudaStatus = cudaDeviceSynchronize();
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching crackDes!\n", cudaStatus);
+//		goto Error;
+//	}
+//
+//	// Copy output vector from GPU buffer to host memory.
+//	cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
+//	if (cudaStatus != cudaSuccess) {
+//		fprintf(stderr, "cudaMemcpy failed!");
+//		goto Error;
+//	}
+//
+//Error:
+//	cudaFree(dev_c);
+//	cudaFree(dev_a);
+//	cudaFree(dev_b);
+//
+//	return cudaStatus;
+//}
 
 
 
