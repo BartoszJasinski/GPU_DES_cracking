@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <vector>
 #include <iomanip>
-
 typedef unsigned char BYTE;
 
 using namespace std;
@@ -192,7 +191,7 @@ void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 	}
 }
 
-void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, int PC[])
+__host__ __device__ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, int PC[])
 {
 	for (int i = 0; i < key_binary_size; i++)
 		key_binary_ret[i] = key_binary[PC[i]];
@@ -200,7 +199,7 @@ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, int 
 }
 
 //C and D should have 28 array memebers
-void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
+__host__ __device__ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
 {
 	const int size = key_size / 2;
 	int tmp_C[28], tmp_D[28];
@@ -218,7 +217,7 @@ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size,
 
 }
 
-void decimal2Binary(int decimal_int, int binary_int[], int run_number)
+__host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int run_number)
 {
 	if (decimal_int <= 1) {
 		binary_int[run_number] = decimal_int;
@@ -230,7 +229,7 @@ void decimal2Binary(int decimal_int, int binary_int[], int run_number)
 	binary_int[run_number] = remainder;
 }
 
-void reverseTab(int tab[], int tab_length)
+__host__ __device__ void reverseTab(int tab[], int tab_length)
 {
 	for (int i = 0; i < tab_length / 2; i++)
 	{
@@ -241,7 +240,7 @@ void reverseTab(int tab[], int tab_length)
 	}
 }
 
-void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
+__host__ __device__ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 {
 	for(int i = 0; i < key_size; i++)
 	{
@@ -251,14 +250,14 @@ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 }
 
 
-void expand(int R[], int tab_ret[], int E[], int E_size)
+__host__ __device__ void expand(int R[], int tab_ret[], int E[], int E_size)
 {
 
 	for (int i = 0; i < E_size; i++)
 		tab_ret[i] = R[E[i]];
 }
 
-void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
+__host__ __device__ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 {
 	for (int i = 0; i < tab_size; i++)
 		tab_ret[i] = (int)(!first_tab[i] != !second_tab[i]);
@@ -266,7 +265,7 @@ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 }
 
 //-->
-long long binary2Decimal(int binary_int[], int tab_length)
+__host__ __device__ long long binary2Decimal(int binary_int[], int tab_length)
 {
 	string int_string = "";
 
@@ -280,7 +279,7 @@ long long binary2Decimal(int binary_int[], int tab_length)
 	return value;
 }
 
-void f(int R[], int K[], int ret_tab[])
+__host__ __device__ void f(int R[], int K[], int ret_tab[])
 {
 	int R_expanded[48];
 	expand(R, R_expanded, E, 48);
@@ -294,7 +293,7 @@ void f(int R[], int K[], int ret_tab[])
 //	cout << endl << endl << endl;
 	
 	int xored[48];
-	xor (K, R_expanded, 48, xored);
+	xor(K, R_expanded, 48, xored);
 	//DEBUG
 //	for(int i = 0; i < 48; i++)
 //	{
@@ -347,7 +346,7 @@ void f(int R[], int K[], int ret_tab[])
 }
 
 
-void reverse(int L[], int R[], int tab_length, int ret_tab[])
+__host__ __device__ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 {
 	for (int i = 0; i < tab_length; i++)
 	{
@@ -356,7 +355,7 @@ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 	}
 }
 
-void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
+__host__ __device__ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
 {
 	int L[32], R[32];
 	for(int i = 0; i < message_size / 2; i++)
@@ -433,12 +432,11 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 
 
 //key_binary_ret should be 64 bit long
-void desEncyption(int message_binary[], int message_size,int key_binary[], int key_size, int msg_ret[])
+__host__ __device__ void desEncyption(int message_binary[], int message_size, int key_binary[], int key_size, int msg_ret[])
 {
 	int des_block_size_bytes = 8;
 	int des_block_size_bits = 64;
 
-//	cout << "omg";
 	//DEBUG
 //		cout << message.size();
 //		cout << "\n" << message << "\n";
@@ -590,12 +588,12 @@ const char* hexChar2Bin(char c)
 	}
 }
 
-std::string hex2Bin(const std::string& hex)
+string hex2Bin(const string& hex)
 {
-	// TODO use a loop from <algorithm> or smth
 	std::string bin;
 	for (unsigned i = 0; i != hex.length(); ++i)
 		bin += hexChar2Bin(hex[i]);
+
 	return bin;
 }
 
@@ -618,7 +616,7 @@ void bin2Hex(string binary)
 
 }
 
-string getHexStringFromBinaryString(string sHex)
+__host__ __device__ string getHexStringFromBinaryString(string sHex)
 {
 	string sReturn = "";
 	int bit_length = 4;
@@ -666,10 +664,9 @@ string getHexStringFromBinaryString(string sHex)
 
 }
 
-
+//TODO implement different bases
 string desEncyption(string message2Encrypt, string key, DesStringBase base)
 {
-	//TODO implement different bases
 	string str_message = hex2Bin(message2Encrypt);
 	vector<int> message_binary = str2Int(str_message);
 	string str_key = hex2Bin(key);
@@ -680,6 +677,7 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 		//TODO implement decimal to hex
 	}
 
+	int msg_ret_size = 64;
 	int msg_ret[64];
 	desEncyption(&message_binary[0], message_binary.size(), &key_binary[0], key.size(), msg_ret);
 	//DEBUG
@@ -691,7 +689,7 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 	//	}
 
 	string binary;
-	for (int i = 0; i < 64; i++)
+	for (int i = 0; i < msg_ret_size; i++)
 		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
 	//DEBUG
 	//cout << binary;
@@ -758,16 +756,17 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 //	return 0;
 //}
 
-vector<int> consecutiveKeyGenerator()
+__device__ vector<int> consecutiveKeyGenerator()
 {
 	vector<int> key;
+	
 	for (int i = 0; i < 63; i++)
 		key.push_back(0);
 	key.push_back(1);
 	return key;
 }
 
-bool compareArrays(int message[], vector<int> cypherText)
+__device__ bool compareArrays(int message[], vector<int> cypherText)
 {
 	for (int i = 0; i < 64; i++)
 	{
@@ -778,23 +777,30 @@ bool compareArrays(int message[], vector<int> cypherText)
 	return true;
 }
 
-//__global__ 
-__host__ void crackDes(string message, string cyphertext)
+
+__global__ void crackDes(vector<int> message_binary, vector<int> cyphertext_binary)
 {
-	string str_message = hex2Bin(message);
-	vector<int> message_binary = str2Int(str_message);
 	vector<int> possible_key_binary = consecutiveKeyGenerator();
-	
-	string str_cyphertext = hex2Bin(cyphertext);
-	vector<int> cyphertext_binary = str2Int(str_cyphertext);
 
 	int msg_ret[64];
 	desEncyption(&message_binary[0], message_binary.size(), &possible_key_binary[0], 16, msg_ret);
 
 	if (compareArrays(msg_ret, cyphertext_binary))
 		for (int i = 0; i < 64; i++)
-			cout << possible_key_binary[i];
-	cout << "\n";
+			printf("%d", possible_key_binary[i]);
+	printf("\n");
+}
+
+//__global__ 
+__host__ void crackDes(string message, string cyphertext)
+{
+	string str_message = hex2Bin(message);
+	vector<int> message_binary = str2Int(str_message);
+	string str_cyphertext = hex2Bin(cyphertext);
+	vector<int> cyphertext_binary = str2Int(str_cyphertext);
+	
+	crackDes<<<1, 1>>>(message_binary, cyphertext_binary);
+
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -813,9 +819,9 @@ __host__ void crackDes(string message, string cyphertext)
 
 int main()
 {
-	string message = "0123456789ABCDEE", key = "0000000000000000";
+	string message = "0123456789EEEEEE", key = "0000000000000001";
 	string cypherText = desEncyption(message, key, DesStringBase::Hex);
-	//cout << cypherText << "\n";
+//	cout << cypherText << "\n";
 	crackDes(message, cypherText);
 
 
