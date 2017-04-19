@@ -815,8 +815,8 @@ int main()
 {
 	string message = "0123456789ABCDEE", key = "0000000000000000";
 	string cypherText = desEncyption(message, key, DesStringBase::Hex);
-	//cout << cypherText << "\n";
-	crackDes(message, cypherText);
+	cout << cypherText << "\n";
+	//crackDes(message, cypherText);
 
 
 
