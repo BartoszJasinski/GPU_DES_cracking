@@ -750,7 +750,7 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 ////	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
 //	time_t start = time(nullptr);
 //	for(int i = 0; i < 2000; i++)
-//		string cypherText = desEncyption(message, key, DesStringBase::Hex);
+//		string cyphertext = desEncyption(message, key, DesStringBase::Hex);
 //	time_t stop = time(nullptr);
 //
 //	cout << "\n\n\n" << difftime(stop, start);
@@ -758,43 +758,57 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 //	return 0;
 //}
 
-vector<int> consecutiveKeyGenerator()
+__device__ void consecutiveKeyGenerator(unsigned long long &present_key, int next_key_binary[], int next_key_binary_size)
 {
-	vector<int> key;
-	for (int i = 0; i < 63; i++)
-		key.push_back(0);
-	key.push_back(1);
-	return key;
+	for (int i = 0; i < next_key_binary_size; i++)
+		next_key_binary[i] = 0;
+	decimal2Binary(present_key, next_key_binary, 0);
+	present_key++;
 }
 
-bool compareArrays(int message[], vector<int> cypherText)
+bool compareArrays(int message[], int cyphertext[])
 {
 	for (int i = 0; i < 64; i++)
 	{
-		if (message[i] != cypherText[i])
+		if (message[i] != cyphertext[i])
 			return false;
 	}
 
 	return true;
 }
 
-//__global__ 
-__host__ void crackDes(string message, string cyphertext)
+__global__ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
 {
-	string str_message = hex2Bin(message);
-	vector<int> message_binary = str2Int(str_message);
-	vector<int> possible_key_binary = consecutiveKeyGenerator();
+	int possible_key_binary_size = 56;
+	int possible_key_binary[56];
+	unsigned long long present_key = 0;
+	consecutiveKeyGenerator(present_key, possible_key_binary, 56);
+	//DEBUG
+	for (int i = 0; i < possible_key_binary_size; ++i)
+	{
+		printf("%i", possible_key_binary[i]);
+	}
 	
-	string str_cyphertext = hex2Bin(cyphertext);
-	vector<int> cyphertext_binary = str2Int(str_cyphertext);
-
+	unsigned long long last_key;
 	int msg_ret[64];
-	desEncyption(&message_binary[0], message_binary.size(), &possible_key_binary[0], 16, msg_ret);
+	desEncyption(&message_binary[0], message_binary_size, &possible_key_binary[0], 16, msg_ret);
 
 	if (compareArrays(msg_ret, cyphertext_binary))
 		for (int i = 0; i < 64; i++)
 			cout << possible_key_binary[i];
 	cout << "\n";
+}
+
+
+__host__ void crackDes(string message, string cyphertext)
+{
+	string str_message = hex2Bin(message);
+	vector<int> message_binary = str2Int(str_message);
+	
+	string str_cyphertext = hex2Bin(cyphertext);
+	vector<int> cyphertext_binary = str2Int(str_cyphertext);
+
+	crackDes<<<1, 1>>>(&message_binary[0], &cyphertext_binary[0], message_binary.size());
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -816,7 +830,7 @@ int main()
 	string message = "0123456789ABCDEE", key = "0000000000000000";
 	string cypherText = desEncyption(message, key, DesStringBase::Hex);
 	cout << cypherText << "\n";
-	//crackDes(message, cypherText);
+	//crackDes(message, cyphertext);
 
 
 
