@@ -218,7 +218,7 @@ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size,
 
 }
 
-void decimal2Binary(int decimal_int, int binary_int[], int run_number)
+__host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int run_number)
 {
 	if (decimal_int <= 1) {
 		binary_int[run_number] = decimal_int;
@@ -433,7 +433,7 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 
 
 //key_binary_ret should be 64 bit long
-void desEncyption(int message_binary[], int message_size,int key_binary[], int key_size, int msg_ret[])
+__host__ __device__ void desEncyption(int message_binary[], int message_size,int key_binary[], int key_size, int msg_ret[])
 {
 	int des_block_size_bytes = 8;
 	int des_block_size_bits = 64;
@@ -777,7 +777,7 @@ __device__ bool compareArrays(int message[], int cyphertext[])
 	return true;
 }
 
-//__global__ 
+__global__ 
 void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
 {
 	int possible_key_binary_size = 56;
@@ -809,7 +809,7 @@ __host__ void crackDes(string message, string cyphertext)
 	string str_cyphertext = hex2Bin(cyphertext);
 	vector<int> cyphertext_binary = str2Int(str_cyphertext);
 
-//	crackDes<<<1, 1>>>(&message_binary[0], &cyphertext_binary[0], message_binary.size());
+	crackDes<<<1, 1>>>(&message_binary[0], &cyphertext_binary[0], message_binary.size());
 
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
