@@ -766,7 +766,7 @@ __device__ void consecutiveKeyGenerator(unsigned long long &present_key, int nex
 	present_key++;
 }
 
-bool compareArrays(int message[], int cyphertext[])
+__device__ bool compareArrays(int message[], int cyphertext[])
 {
 	for (int i = 0; i < 64; i++)
 	{
@@ -777,7 +777,8 @@ bool compareArrays(int message[], int cyphertext[])
 	return true;
 }
 
-__global__ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
+//__global__ 
+void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
 {
 	int possible_key_binary_size = 56;
 	int possible_key_binary[56];
@@ -791,12 +792,12 @@ __global__ void crackDes(int message_binary[], int cyphertext_binary[], int mess
 	
 	unsigned long long last_key;
 	int msg_ret[64];
-	desEncyption(&message_binary[0], message_binary_size, &possible_key_binary[0], 16, msg_ret);
+	desEncyption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
 
 	if (compareArrays(msg_ret, cyphertext_binary))
 		for (int i = 0; i < 64; i++)
-			cout << possible_key_binary[i];
-	cout << "\n";
+			printf("%i", possible_key_binary[i]);
+	printf("\n");
 }
 
 
@@ -808,7 +809,8 @@ __host__ void crackDes(string message, string cyphertext)
 	string str_cyphertext = hex2Bin(cyphertext);
 	vector<int> cyphertext_binary = str2Int(str_cyphertext);
 
-	crackDes<<<1, 1>>>(&message_binary[0], &cyphertext_binary[0], message_binary.size());
+//	crackDes<<<1, 1>>>(&message_binary[0], &cyphertext_binary[0], message_binary.size());
+
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -816,7 +818,7 @@ __host__ void crackDes(string message, string cyphertext)
 	//			cout << " ";
 	//		cout << msg_ret[i];
 	//	}
-
+		
 //	string binary;
 //	for (int i = 0; i < 64; i++)
 //		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
@@ -827,10 +829,11 @@ __host__ void crackDes(string message, string cyphertext)
 
 int main()
 {
-	string message = "0123456789ABCDEE", key = "0000000000000000";
-	string cypherText = desEncyption(message, key, DesStringBase::Hex);
-	cout << cypherText << "\n";
-	//crackDes(message, cyphertext);
+	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+	string cyphertext = desEncyption(message, key, DesStringBase::Hex);
+	cout << cyphertext << "\n";
+	//cyphertext = ""
+//	crackDes(message, cyphertext);
 
 
 
