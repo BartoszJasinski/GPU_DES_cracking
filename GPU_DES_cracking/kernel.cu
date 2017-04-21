@@ -152,12 +152,6 @@ const int IP_1[] = {
 33, 1, 41, 9, 49, 17, 57, 25,
 32, 0, 40, 8, 48, 16, 56, 24 };
 
-
-
-
-
-
-
 void fun()
 {
 	for(int i = 0; i < 56; i++)
@@ -198,7 +192,7 @@ void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 	}
 }
 
-__host__ __device__ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, const int PC[])
+void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, const int PC[])
 {
 	for (int i = 0; i < key_binary_size; i++)
 		key_binary_ret[i] = key_binary[PC[i]];
@@ -206,7 +200,7 @@ __host__ __device__ void permutePC(int key_binary[], int key_binary_ret[], int k
 }
 
 //C and D should have 28 array memebers
-__host__ __device__ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
+void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
 {
 	const int size = key_size / 2;
 	int tmp_C[28], tmp_D[28];
@@ -257,14 +251,14 @@ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 }
 
 
-__host__ __device__ void expand(int R[], int tab_ret[], const int E[], int E_size)
+void expand(int R[], int tab_ret[], const int E[], int E_size)
 {
 
 	for (int i = 0; i < E_size; i++)
 		tab_ret[i] = R[E[i]];
 }
 
-__host__ __device__ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
+void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 {
 	for (int i = 0; i < tab_size; i++)
 		tab_ret[i] = (int)(!first_tab[i] != !second_tab[i]);
@@ -272,7 +266,7 @@ __host__ __device__ void xor(int first_tab[], int second_tab[], int tab_size, in
 }
 
 //-->
-__host__ __device__ long long binary2Decimal(int binary_int[], int tab_length)
+long long binary2Decimal(int binary_int[], int tab_length)
 {
 	string int_string = "";
 
@@ -286,7 +280,7 @@ __host__ __device__ long long binary2Decimal(int binary_int[], int tab_length)
 	return value;
 }
 
-__host__ __device__ void f(int R[], int K[], int ret_tab[])
+void f(int R[], int K[], int ret_tab[])
 {
 	int R_expanded[48];
 	expand(R, R_expanded, E, 48);
@@ -362,7 +356,7 @@ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 	}
 }
 
-__host__ __device__ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
+void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
 {
 	int L[32], R[32];
 	for(int i = 0; i < message_size / 2; i++)
