@@ -777,22 +777,39 @@ __device__ bool compareArrays(int message[], int cyphertext[])
 	return true;
 }
 
+__global__ void TEST1()
+{
+	printf("%s", "TEST");
+}
+
 __global__ 
 void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
 {
+	printf("%s\n", "__global__ cracDes");
+
 	int possible_key_binary_size = 56;
 	int possible_key_binary[56];
 	unsigned long long present_key = 0;
-	consecutiveKeyGenerator(present_key, possible_key_binary, 56);
+	consecutiveKeyGenerator(present_key, possible_key_binary, possible_key_binary_size);
 	//DEBUG
-	for (int i = 0; i < possible_key_binary_size; ++i)
-	{
-		printf("%i", possible_key_binary[i]);
-	}
+//	for (int i = 0; i < possible_key_binary_size; ++i)
+//	{
+//		printf("%i", possible_key_binary[i]);
+//	}
 	
 	unsigned long long last_key;
 	int msg_ret[64];
+	
+	printf("%s\n", "BEFORE desEncryption");
+
 	desEncyption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
+
+	printf("%s\n", "AFTER desEncryption");
+
+	if (compareArrays(msg_ret, cyphertext_binary))
+		printf("%s\n", "true");
+	else
+		printf("%s\n", "false");
 
 	if (compareArrays(msg_ret, cyphertext_binary))
 		for (int i = 0; i < 64; i++)
@@ -809,7 +826,14 @@ __host__ void crackDes(string message, string cyphertext)
 	string str_cyphertext = hex2Bin(cyphertext);
 	vector<int> cyphertext_binary = str2Int(str_cyphertext);
 
-	crackDes<<<1, 1>>>(&message_binary[0], &cyphertext_binary[0], message_binary.size());
+	int* d_message_binary = 0;
+	cudaMalloc((void**)&d_message_binary, message_binary.size() * sizeof(int));
+
+	int* d_cyphertext_binary = 0;
+	cudaMalloc((void**)&d_cyphertext_binary, cyphertext_binary.size() * sizeof(int));
+
+	//TEST1<<<1, 1 >>>();
+	crackDes<<<1, 1>>>(d_message_binary, d_cyphertext_binary, message_binary.size());
 
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
@@ -829,11 +853,12 @@ __host__ void crackDes(string message, string cyphertext)
 
 int main()
 {
-	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+	string message = "0123456789ABCDEF", key = "0000000000000000";
 	string cyphertext = desEncyption(message, key, DesStringBase::Hex);
 	cout << cyphertext << "\n";
 	//cyphertext = ""
-//	crackDes(message, cyphertext);
+	crackDes(message, cyphertext);
+	cudaDeviceSynchronize();
 
 
 
