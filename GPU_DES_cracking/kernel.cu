@@ -433,7 +433,7 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 
 
 //key_binary_ret should be 64 bit long
-__host__ __device__ void desEncyption(int message_binary[], int message_size,int key_binary[], int key_size, int msg_ret[])
+__host__ __device__ void desEncyption(int message_binary[], int message_size, int key_binary[], int key_size, int msg_ret[])
 {
 	int des_block_size_bytes = 8;
 	int des_block_size_bits = 64;
@@ -599,13 +599,11 @@ std::string hex2Bin(const std::string& hex)
 	return bin;
 }
 
-vector<int> str2Int(string& str_int)
+void str2Int(string& str_int, int ret_int[], int ret_int_size)
 {
-	vector<int> int_vector;
-	for (int i = 0; i < str_int.size(); i++)
-		int_vector.push_back(str_int.c_str()[i] - '0');
+	for (int i = 0; i < ret_int_size; i++)
+		ret_int[i] = (str_int.c_str()[i] - '0');
 
-	return int_vector;
 }
 
 void bin2Hex(string binary)
@@ -671,9 +669,14 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 {
 	//TODO implement different bases
 	string str_message = hex2Bin(message2Encrypt);
-	vector<int> message_binary = str2Int(str_message);
+	int message_binary_size = 64;
+	int message_binary[64];
+	str2Int(str_message, message_binary, message_binary_size);
 	string str_key = hex2Bin(key);
-	vector<int> key_binary = str2Int(str_key);
+	int key_binary_size = 64;
+	int key_binary[64];
+	str2Int(str_key, key_binary, key_binary_size);
+
 
 	if(base == Decimal)
 	{
@@ -681,7 +684,7 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 	}
 
 	int msg_ret[64];
-	desEncyption(&message_binary[0], message_binary.size(), &key_binary[0], key.size(), msg_ret);
+	desEncyption(message_binary, message_binary_size, key_binary, key.size(), msg_ret);
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -699,66 +702,7 @@ string desEncyption(string message2Encrypt, string key, DesStringBase base)
 	return getHexStringFromBinaryString(binary);
 }
 
-
-//Shifts
-//11110000110011001010101011110101010101100110011110001111
-//11100001100110010101010111111010101011001100111100011110
-//11000011001100101010101111110101010110011001111000111101
-//00001100110010101010111111110101011001100111100011110101
-//00110011001010101011111111000101100110011110001111010101
-//11001100101010101111111100000110011001111000111101010101
-//00110010101010111111110000111001100111100011110101010101
-//11001010101011111111000011000110011110001111010101010110
-//00101010101111111100001100111001111000111101010101011001
-//01010101011111111000011001100011110001111010101010110011
-//01010101111111100001100110011111000111101010101011001100
-//01010111111110000110011001011100011110101010101100110011
-//01011111111000011001100101010001111010101010110011001111
-//01111111100001100110010101010111101010101011001100111100
-//11111110000110011001010101011110101010101100110011110001
-//11111000011001100101010101111010101010110011001111000111
-//11110000110011001010101011110101010101100110011110001111
-
-//K
-//000110110000001011101111111111000111000001110010
-//011110011010111011011001110110111100100111100101
-//010101011111110010001010010000101100111110011001
-//011100101010110111010110110110110011010100011101
-//011111001110110000000111111010110101001110101000
-//011000111010010100111110010100000111101100101111
-//111011001000010010110111111101100001100010111100
-//111101111000101000111010110000010011101111111011
-//111000001101101111101011111011011110011110000001
-//101100011111001101000111101110100100011001001111
-//001000010101111111010011110111101101001110000110
-//011101010111000111110101100101000110011111101001
-//100101111100010111010001111110101011101001000001
-//010111110100001110110111111100101110011100111010
-//101111111001000110001101001111010011111100001010
-//110010110011110110001011000011100001011111110101
-
-
-//MESSAGE AFTER IP
-//1100110000000000110011001111111111110000101010101111000010101010
-
-
-
-//int main()
-//{
-//	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
-////	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
-////	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
-//	time_t start = time(nullptr);
-//	for(int i = 0; i < 2000; i++)
-//		string cyphertext = desEncyption(message, key, DesStringBase::Hex);
-//	time_t stop = time(nullptr);
-//
-//	cout << "\n\n\n" << difftime(stop, start);
-//
-//	return 0;
-//}
-
-__device__ void consecutiveKeyGenerator(unsigned long long &present_key, int next_key_binary[], int next_key_binary_size)
+__host__ __device__ void consecutiveKeyGenerator(unsigned long long &present_key, int next_key_binary[], int next_key_binary_size)
 {
 	for (int i = 0; i < next_key_binary_size; i++)
 		next_key_binary[i] = 0;
@@ -766,7 +710,7 @@ __device__ void consecutiveKeyGenerator(unsigned long long &present_key, int nex
 	present_key++;
 }
 
-__device__ bool compareArrays(int message[], int cyphertext[])
+__host__ __device__ bool compareArrays(int message[], int cyphertext[])
 {
 	for (int i = 0; i < 64; i++)
 	{
@@ -817,23 +761,66 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 	printf("\n");
 }
 
+//__host__ 
+void IReportU(int message_binary[], int cyphertext_binary[], int message_binary_size)
+{
+	printf("%s\n", "__global__ cracDes");
 
-__host__ void crackDes(string message, string cyphertext)
+	int possible_key_binary_size = 64;
+	int possible_key_binary[64];
+	unsigned long long present_key = 0;
+	consecutiveKeyGenerator(present_key, possible_key_binary, possible_key_binary_size);
+	//DEBUG
+	int i;
+		for (i = 0; i < possible_key_binary_size; ++i)
+		{
+			printf("%i", possible_key_binary[i]);
+		}
+	//	printf("%i", i);
+
+	unsigned long long last_key;
+	int msg_ret[64];
+
+	printf("%s\n", "BEFORE desEncryption");
+
+	desEncyption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
+
+	printf("%s\n", "AFTER desEncryption");
+
+	if (compareArrays(msg_ret, cyphertext_binary))
+		printf("%s\n", "true");
+	else
+		printf("%s\n", "false");
+
+	if (compareArrays(msg_ret, cyphertext_binary))
+		for (int i = 0; i < possible_key_binary_size; i++)
+			printf("%i", possible_key_binary[i]);
+	printf("\n");
+}
+
+
+//__host__ 
+void crackDes(string message, string cyphertext)
 {
 	string str_message = hex2Bin(message);
-	vector<int> message_binary = str2Int(str_message);
+	int h_message_binary_size = 64;
+	int h_message_binary[64];
+	str2Int(str_message, h_message_binary, h_message_binary_size);
 	
 	string str_cyphertext = hex2Bin(cyphertext);
-	vector<int> cyphertext_binary = str2Int(str_cyphertext);
+	int h_cyphertext_binary_size = 64;
+	int h_cyphertext_binary[64];
+	str2Int(str_cyphertext, h_cyphertext_binary, h_cyphertext_binary_size);
+	
+//	int* d_message_binary = 0;
+//	cudaMalloc((void**)&d_message_binary, h_message_binary_size * sizeof(int));
+//
+//	int* d_cyphertext_binary = 0;
+//	cudaMalloc((void**)&d_cyphertext_binary, h_cyphertext_binary_size * sizeof(int));
 
-	int* d_message_binary = 0;
-	cudaMalloc((void**)&d_message_binary, message_binary.size() * sizeof(int));
-
-	int* d_cyphertext_binary = 0;
-	cudaMalloc((void**)&d_cyphertext_binary, cyphertext_binary.size() * sizeof(int));
-
+	IReportU(h_message_binary, h_cyphertext_binary, h_message_binary_size);
 	//TEST1<<<1, 1 >>>();
-	crackDes<<<1, 1>>>(d_message_binary, d_cyphertext_binary, message_binary.size());
+	//crackDes<<<1, 1>>>(d_message_binary, d_cyphertext_binary, message_binary.size());
 
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
@@ -1015,3 +1002,65 @@ int main()
 //1 15 13 8 10 3 7 4 12 5 6 11 0 14 9 2
 //7 11 4 1 9 12 14 2 0 6 10 13 15 3 5 8
 //2 1 14 7 4 10 8 13 15 12 9 0 3 5 6 11
+
+
+
+
+/////////////////////////////////////////////////
+//Shifts
+//11110000110011001010101011110101010101100110011110001111
+//11100001100110010101010111111010101011001100111100011110
+//11000011001100101010101111110101010110011001111000111101
+//00001100110010101010111111110101011001100111100011110101
+//00110011001010101011111111000101100110011110001111010101
+//11001100101010101111111100000110011001111000111101010101
+//00110010101010111111110000111001100111100011110101010101
+//11001010101011111111000011000110011110001111010101010110
+//00101010101111111100001100111001111000111101010101011001
+//01010101011111111000011001100011110001111010101010110011
+//01010101111111100001100110011111000111101010101011001100
+//01010111111110000110011001011100011110101010101100110011
+//01011111111000011001100101010001111010101010110011001111
+//01111111100001100110010101010111101010101011001100111100
+//11111110000110011001010101011110101010101100110011110001
+//11111000011001100101010101111010101010110011001111000111
+//11110000110011001010101011110101010101100110011110001111
+
+//K
+//000110110000001011101111111111000111000001110010
+//011110011010111011011001110110111100100111100101
+//010101011111110010001010010000101100111110011001
+//011100101010110111010110110110110011010100011101
+//011111001110110000000111111010110101001110101000
+//011000111010010100111110010100000111101100101111
+//111011001000010010110111111101100001100010111100
+//111101111000101000111010110000010011101111111011
+//111000001101101111101011111011011110011110000001
+//101100011111001101000111101110100100011001001111
+//001000010101111111010011110111101101001110000110
+//011101010111000111110101100101000110011111101001
+//100101111100010111010001111110101011101001000001
+//010111110100001110110111111100101110011100111010
+//101111111001000110001101001111010011111100001010
+//110010110011110110001011000011100001011111110101
+
+
+//MESSAGE AFTER IP
+//1100110000000000110011001111111111110000101010101111000010101010
+
+
+
+//int main()
+//{
+//	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+////	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
+////	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
+//	time_t start = time(nullptr);
+//	for(int i = 0; i < 2000; i++)
+//		string cyphertext = desEncyption(message, key, DesStringBase::Hex);
+//	time_t stop = time(nullptr);
+//
+//	cout << "\n\n\n" << difftime(stop, start);
+//
+//	return 0;
+//}
