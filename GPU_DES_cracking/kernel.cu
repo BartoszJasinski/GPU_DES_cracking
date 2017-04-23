@@ -730,7 +730,7 @@ __global__
 void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
 {
 	printf("%s\n", "__global__ cracDes");
-
+	//FIXME only 64 works but it is unnecessary we should use 56
 	int possible_key_binary_size = 56;
 	int possible_key_binary[56];
 	unsigned long long present_key = 0;
