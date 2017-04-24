@@ -292,7 +292,7 @@ void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
 	}
 }
 
-void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, const int PC[])
+__device__ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, const int PC[])
 {
 	for (int i = 0; i < key_binary_size; i++)
 		key_binary_ret[i] = key_binary[PC[i]];
@@ -300,7 +300,7 @@ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, cons
 }
 
 //C and D should have 28 array memebers
-void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
+__device__ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
 {
 	const int size = key_size / 2;
 	int tmp_C[28], tmp_D[28];
@@ -330,7 +330,7 @@ __host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int r
 	binary_int[run_number] = remainder;
 }
 
-void reverseTab(int tab[], int tab_length)
+__device__ void reverseTab(int tab[], int tab_length)
 {
 	for (int i = 0; i < tab_length / 2; i++)
 	{
@@ -341,7 +341,7 @@ void reverseTab(int tab[], int tab_length)
 	}
 }
 
-void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
+__device__ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 {
 	for(int i = 0; i < key_size; i++)
 	{
@@ -351,14 +351,14 @@ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 }
 
 
-void expand(int R[], int tab_ret[], const int E[], int E_size)
+__device__ void expand(int R[], int tab_ret[], const int E[], int E_size)
 {
 
 	for (int i = 0; i < E_size; i++)
 		tab_ret[i] = R[E[i]];
 }
 
-void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
+__device__ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 {
 	for (int i = 0; i < tab_size; i++)
 		tab_ret[i] = (int)(!first_tab[i] != !second_tab[i]);
@@ -366,21 +366,37 @@ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 }
 
 //-->
-long long binary2Decimal(int binary_int[], int tab_length)
-{
-	string int_string = "";
+//__device__ long long binary2Decimal(int binary_int[], int tab_length)
+//{
+//	/*string int_string = "";
+//
+//	for (int i = 0; i < tab_length; i++)
+//		int_string += to_string(binary_int[i]);
+//	stringstream ss;
+//	ss << int_string;
+//	string str = ss.str();
+//	unsigned long long value = std::stoull(str, 0, 2);
+//	//std::cout << value << std::endl;
+//	*/
+//	return 0;
+//}
 
-	for (int i = 0; i < tab_length; i++)
-		int_string += to_string(binary_int[i]);
-	stringstream ss;
-	ss << int_string;
-	string str = ss.str();
-	unsigned long long value = std::stoull(str, 0, 2);
-	//std::cout << value << std::endl;
-	return value;
+__device__ long long binary2Decimal(int binary_int[], int tab_length)
+{
+	long long dec = 0;
+
+	for (int i = 0; i < tab_length; ++i)
+	{
+		int bin = binary_int[i];
+		if (bin) dec = dec * 2 + 1;
+		else dec *= 2;
+
+	}
+
+	return dec;
 }
 
-void f(int R[], int K[], int ret_tab[])
+__device__ void f(int R[], int K[], int ret_tab[])
 {
 	int R_expanded[48];
 	expand(R, R_expanded, d_E, 48);
@@ -447,7 +463,7 @@ void f(int R[], int K[], int ret_tab[])
 }
 
 
-void reverse(int L[], int R[], int tab_length, int ret_tab[])
+__device__ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 {
 	for (int i = 0; i < tab_length; i++)
 	{
@@ -456,7 +472,7 @@ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 	}
 }
 
-void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
+__device__ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
 {
 	int L[32], R[32];
 	for(int i = 0; i < message_size / 2; i++)
@@ -533,7 +549,7 @@ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_
 
 
 //key_binary_ret should be 64 bit long
-__host__ __device__ void desEncryption(int message_binary[], int message_size, int key_binary[], int key_size, int msg_ret[])
+__device__ void desEncryption(int message_binary[], int message_size, int key_binary[], int key_size, int msg_ret[])
 {
 	int des_block_size_bytes = 8;
 	int des_block_size_bits = 64;
@@ -549,7 +565,7 @@ __host__ __device__ void desEncryption(int message_binary[], int message_size, i
 	if (message_size % des_block_size_bytes)
 	{
 		//int tmp_message_binary[message_size + des_block_size_bytes - (message_size % des_block_size_bytes)]
-			cout << "KICIA";
+			printf("%s\n", "KICIA");
 	//	message_binary.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
 	}
 
@@ -784,7 +800,10 @@ string desEncryption(string message2Encrypt, string key, DesStringBase base)
 	}
 
 	int msg_ret[64];
-	desEncryption(message_binary, message_binary_size, key_binary, key.size(), msg_ret);
+	//ANKOMENT MI
+//	desEncryption(message_binary, message_binary_size, key_binary, key.size(), msg_ret);
+	//ANKOMENT MI
+	
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -879,9 +898,9 @@ void IReportU(int message_binary[], int cyphertext_binary[], int message_binary_
 	int msg_ret[64];
 
 	printf("%s\n", "BEFORE desEncryption");
-
-	desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
-
+//ANKOMENT MI
+//	desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
+//ANKOMENT MI
 	printf("%s\n", "AFTER desEncryption");
 
 	if (compareArrays(msg_ret, cyphertext_binary))
@@ -1040,16 +1059,51 @@ __global__ void arrayCheck(int size1, int size2, int size3)
 		
 }
 
+long long b2D(int binary_int[], int tab_length)
+{
+	string int_string = "";
+
+	for (int i = 0; i < tab_length; i++)
+		int_string += to_string(binary_int[i]);
+	stringstream ss;
+	ss << int_string;
+	string str = ss.str();
+	unsigned long long value = std::stoull(str, 0, 2);
+	//std::cout << value << std::endl;
+	return value;
+}
+
+
+
+
+void reimmplemnt()
+{
+//	int b1[] = {1, 1, 1, 1, 1, 1, 0, 0, 0,1 ,0 ,0, 1, 1  };
+//	long long b2D1 = b2D(b1, 14), B1 = B(b1, 14);
+//	printf("%i\n", b2D1);
+//	printf("%i\n", B1);
+
+
+}
+
+
 
 int main()
 {
+	reimmplemnt();
 	initArrays();
-//	arrayCheck << <1, 1 >> > (S_size_1, S_size_2, S_size_3);
+
+	
+	//	arrayCheck << <1, 1 >> > (S_size_1, S_size_2, S_size_3);
 //	cudaDeviceSynchronize();
+	
+	
 	string message = "0123456789ABCDEF", key = "0000000000000000";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
-//	cout << ct << "\n";
+	
+	
+	//	cout << ct << "\n";
 //	crackDes(message, cyphertext);
 //	cudaDeviceSynchronize();
 
