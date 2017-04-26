@@ -555,12 +555,12 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 	int des_block_size_bits = 64;
 
 	//DEBUG
-	printf("\n%s\n", "__device__ desEncryption ");
-	printf("%s\n", "message_binary");
-	for (int i = 0; i < message_size; ++i)
-	{
-		printf("%i", message_binary[i]);
-	}
+//	printf("\n%s\n", "__device__ desEncryption ");
+//	printf("%s\n", "message_binary");
+//	for (int i = 0; i < message_size; ++i)
+//	{
+//		printf("%i", message_binary[i]);
+//	}
 //		cout << message.size();
 //		cout << "\n" << message << "\n";
 //if (message.size() * CHAR_BIT != des_block_size_bits)
@@ -850,10 +850,10 @@ __host__ __device__ bool compareArrays(int message[], int cyphertext[])
 __global__ 
 void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
 {
-	printf("%s\n", "__global__ cracDes");
+//	printf("%s\n", "__global__ cracDes");
 
-	int possible_key_binary_size = 56;
-	int possible_key_binary[56];
+	int possible_key_binary_size = 64;
+	int possible_key_binary[64];
 	unsigned long long present_key = 0;
 	consecutiveKeyGenerator(present_key, possible_key_binary, possible_key_binary_size);
 	//DEBUG
@@ -865,11 +865,11 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 	unsigned long long last_key;
 	int msg_ret[64];
 	
-	printf("%s\n", "BEFORE desEncryption");
+//	printf("%s\n", "BEFORE desEncryption");
 
 	desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
 
-	printf("%s\n", "AFTER desEncryption");
+//	printf("%s\n", "AFTER desEncryption");
 
 	if (compareArrays(msg_ret, cyphertext_binary))
 		printf("%s\n", "true");
@@ -920,28 +920,30 @@ void IReportU(int message_binary[], int cyphertext_binary[], int message_binary_
 }
 
 
-//__host__ 
+__host__ 
 void crackDes(string message, string cyphertext)
 {
 	string str_message = hex2Bin(message);
 	int h_message_binary_size = 64;
 	int h_message_binary[64];
 	str2Int(str_message, h_message_binary, h_message_binary_size);
-	
+
 	string str_cyphertext = hex2Bin(cyphertext);
 	int h_cyphertext_binary_size = 64;
 	int h_cyphertext_binary[64];
 	str2Int(str_cyphertext, h_cyphertext_binary, h_cyphertext_binary_size);
 	
-//	int* d_message_binary = 0;
-//	cudaMalloc((void**)&d_message_binary, h_message_binary_size * sizeof(int));
-//
-//	int* d_cyphertext_binary = 0;
-//	cudaMalloc((void**)&d_cyphertext_binary, h_cyphertext_binary_size * sizeof(int));
+	int* d_message_binary = 0;
+	cudaMalloc((void**)&d_message_binary, h_message_binary_size * sizeof(int));
+	cudaMemcpy(d_message_binary, h_message_binary, h_message_binary_size * sizeof(int), cudaMemcpyHostToDevice);
 
-	IReportU(h_message_binary, h_cyphertext_binary, h_message_binary_size);
+	int* d_cyphertext_binary = 0;
+	cudaMalloc((void**)&d_cyphertext_binary, h_cyphertext_binary_size * sizeof(int));
+	cudaMemcpy(d_cyphertext_binary, h_cyphertext_binary, h_cyphertext_binary_size * sizeof(int), cudaMemcpyHostToDevice);
+
+	//IReportU(h_message_binary, h_cyphertext_binary, h_message_binary_size);
 	//TEST1<<<1, 1 >>>();
-	//crackDes<<<1, 1>>>(d_message_binary, d_cyphertext_binary, message_binary.size());
+	crackDes<<<1, 1>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size);
 
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
@@ -963,22 +965,22 @@ __global__
 void desEncryption(int message_binary[], int key_binary[], int message_binary_size, int msg_ret[])
 {
 	//DEBUG
-	printf("%s\n", "before DEBUG __global__ desEncryption MESSAGE_BINARY");
-	for (int i = 0; i < message_binary_size; ++i)
-	{
-		printf("%i", message_binary[i]);
-	}
-	printf("%s\n", "after DEBUG __global__ desEncryption MESSAGE_BINARY");
+//	printf("%s\n", "before DEBUG __global__ desEncryption MESSAGE_BINARY");
+//	for (int i = 0; i < message_binary_size; ++i)
+//	{
+//		printf("%i", message_binary[i]);
+//	}
+//	printf("%s\n", "after DEBUG __global__ desEncryption MESSAGE_BINARY");
 
 	//int msg_ret[64];
 //	printf("%s\n", "BEFORE desEncryption");
 	desEncryption(message_binary, message_binary_size, key_binary, 16, msg_ret);
-	printf("%s\n", "before DEBUG __global__ desEncryption MSG_RET");
-	for (int i = 0; i < 64; ++i)
-	{
-		printf("%i", 123123123);
-	}
-	printf("%s\n", "after DEBUG __global__ desEncryption MSG_RET");
+//	printf("%s\n", "before DEBUG __global__ desEncryption MSG_RET");
+//	for (int i = 0; i < 64; ++i)
+//	{
+//		printf("%i", 123123123);
+//	}
+//	printf("%s\n", "after DEBUG __global__ desEncryption MSG_RET");
 
 
 
@@ -1008,12 +1010,12 @@ string desEncryption(string message, string key, char cyphertext[])
 	cudaMalloc((void**)&d_msg_ret, 64 * sizeof(int));
 
 	//DEBUG
-	printf("%s\n", "before DEBUG __host__ desEncryption");
-	for (int i = 0; i < 64; ++i)
-	{
-		printf("%i", h_message_binary[i]);
-	}
-	printf("%s\n", "after DEBUG __host__ desEncryption");
+//	printf("%s\n", "before DEBUG __host__ desEncryption");
+//	for (int i = 0; i < 64; ++i)
+//	{
+//		printf("%i", h_message_binary[i]);
+//	}
+//	printf("%s\n", "after DEBUG __host__ desEncryption");
 
 	desEncryption<<<1, 1>>>(d_message_binary, d_key_binary, 64, d_msg_ret);
 	cudaDeviceSynchronize();
@@ -1021,12 +1023,12 @@ string desEncryption(string message, string key, char cyphertext[])
 	int* h_msg_ret = (int*)malloc(64 * sizeof(int));
 	cudaMemcpy(h_msg_ret, d_msg_ret, 64 * sizeof(int), cudaMemcpyDeviceToHost);
 	//DEBUG
-	printf("\n%s\n", "before DEBUG __host__ desEncryption H_MSG_RET");
-	for (int i = 0; i < 64; ++i)
-	{
-		printf("%i", h_msg_ret[i]);
-	}
-	printf("%s\n", "after DEBUG __host__ desEncryption H_MSG_RET");
+//	printf("\n%s\n", "before DEBUG __host__ desEncryption H_MSG_RET");
+//	for (int i = 0; i < 64; ++i)
+//	{
+//		printf("%i", h_msg_ret[i]);
+//	}
+//	printf("%s\n", "after DEBUG __host__ desEncryption H_MSG_RET");
 
 
 	string binary;
@@ -1116,12 +1118,12 @@ int main()
 //	cudaDeviceSynchronize();
 	
 	
-	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
+	string message = "0123456789ABCDEF", key = "0000000000000000";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
-//	crackDes(message, cyphertext);
-//	cudaDeviceSynchronize();
+	crackDes(message, ct.c_str());
+	cudaDeviceSynchronize();
 
 
 
@@ -1148,86 +1150,6 @@ int main()
 
 	return 0;
 }
-//
-//// Helper function for using CUDA to add vectors in parallel.
-//cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
-//{
-//	int *dev_a = 0;
-//	int *dev_b = 0;
-//	int *dev_c = 0;
-//	cudaError_t cudaStatus;
-//
-//	// Choose which GPU to run on, change this on a multi-GPU system.
-//	cudaStatus = cudaSetDevice(0);
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
-//		goto Error;
-//	}
-//
-//	// Allocate GPU buffers for three vectors (two input, one output)    .
-//	cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaMalloc failed!");
-//		goto Error;
-//	}
-//
-//	cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaMalloc failed!");
-//		goto Error;
-//	}
-//
-//	cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaMalloc failed!");
-//		goto Error;
-//	}
-//
-//	// Copy input vectors from host memory to GPU buffers.
-//	cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaMemcpy failed!");
-//		goto Error;
-//	}
-//
-//	cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaMemcpy failed!");
-//		goto Error;
-//	}
-//
-//	// Launch a kernel on the GPU with one thread for each element.
-//	crackDes << <1, size >> >(dev_c, dev_a, dev_b);
-//
-//	// Check for any errors launching the kernel
-//	cudaStatus = cudaGetLastError();
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "crackDes launch failed: %s\n", cudaGetErrorString(cudaStatus));
-//		goto Error;
-//	}
-//
-//	// cudaDeviceSynchronize waits for the kernel to finish, and returns
-//	// any errors encountered during the launch.
-//	cudaStatus = cudaDeviceSynchronize();
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching crackDes!\n", cudaStatus);
-//		goto Error;
-//	}
-//
-//	// Copy output vector from GPU buffer to host memory.
-//	cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaMemcpy failed!");
-//		goto Error;
-//	}
-//
-//Error:
-//	cudaFree(dev_c);
-//	cudaFree(dev_a);
-//	cudaFree(dev_b);
-//
-//	return cudaStatus;
-//}
 
 
 
