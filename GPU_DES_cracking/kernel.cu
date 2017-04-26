@@ -776,7 +776,7 @@ string getHexStringFromBinaryString(string sHex)
 		if (s == bins[13])
 			 sReturn.append("D");
 		if (s == bins[14])
-			sReturn.append("d_E");
+			sReturn.append("E");
 		if (s == bins[15])
 			 sReturn.append("F");
 		}
@@ -1116,7 +1116,7 @@ int main()
 //	cudaDeviceSynchronize();
 	
 	
-	string message = "0123456789ABCDEF", key = "0000000000000000";
+	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
