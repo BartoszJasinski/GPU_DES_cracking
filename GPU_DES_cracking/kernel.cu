@@ -62,14 +62,23 @@ cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
 int PC_1_size = 56, shifts_size = 16, PC_2_size = 48, IP_size = 64, E_size = 48, S_size_1 = 8, S_size_2 = 4, S_size_3 = 16, P_size = 32, IP_1_size = 64;
 
+//
+//const int PC_1[56] = { 56, 48, 40, 32, 24, 16, 8, 0,
+//57, 49, 41, 33, 25, 17, 9, 1,
+//58, 50, 42, 34, 26, 18, 10, 2,
+//59, 51, 43, 35, 62, 54, 46, 38,
+//30, 22, 14, 6, 61, 53, 45, 37,
+//29, 21, 13, 5, 60, 52, 44, 36,
+//28, 20, 12, 4, 27, 19, 11, 3 };
 
-const int PC_1[56] = { 56, 48, 40, 32, 24, 16, 8, 0,
-57, 49, 41, 33, 25, 17, 9, 1,
-58, 50, 42, 34, 26, 18, 10, 2,
-59, 51, 43, 35, 62, 54, 46, 38,
-30, 22, 14, 6, 61, 53, 45, 37,
-29, 21, 13, 5, 60, 52, 44, 36,
-28, 20, 12, 4, 27, 19, 11, 3};
+
+const int PC_1[56] = { 49, 42, 35, 28, 21, 14, 7, 0,
+50, 43, 36, 29, 22, 15, 8, 1,
+51, 44, 37, 30, 23, 16, 9, 2,
+52, 45, 38, 31, 55, 48, 41, 34,
+27, 20, 13, 6, 54, 47, 40, 33,
+26, 19, 12, 5, 53, 46, 39, 32,
+25, 18, 11, 4, 24, 17, 10, 3};
 
 
 const int shifts[16] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
@@ -852,8 +861,8 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 {
 //	printf("%s\n", "__global__ cracDes");
 
-	int possible_key_binary_size = 64;
-	int possible_key_binary[64];
+	int possible_key_binary_size = 56;
+	int possible_key_binary[56];
 	unsigned long long present_key = 0;
 	consecutiveKeyGenerator(present_key, possible_key_binary, possible_key_binary_size);
 	//DEBUG
@@ -877,7 +886,7 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 		printf("%s\n", "false");
 
 	if (compareArrays(msg_ret, cyphertext_binary))
-		for (int i = 0; i < 64; i++)
+		for (int i = 0; i < possible_key_binary_size; i++)
 			printf("%i", possible_key_binary[i]);
 	printf("\n");
 }
@@ -973,7 +982,7 @@ void desEncryption(int message_binary[], int key_binary[], int message_binary_si
 //	printf("%s\n", "after DEBUG __global__ desEncryption MESSAGE_BINARY");
 
 	//int msg_ret[64];
-//	printf("%s\n", "BEFORE desEncryption");
+//	printf("%s\n", "BEFORE desEncryption");							14 should be here
 	desEncryption(message_binary, message_binary_size, key_binary, 16, msg_ret);
 //	printf("%s\n", "before DEBUG __global__ desEncryption MSG_RET");
 //	for (int i = 0; i < 64; ++i)
@@ -1100,6 +1109,10 @@ void reimmplemnt()
 }
 
 
+bool inRange(int number, int lower_bound, int upper_bound)
+{
+	return (lower_bound <= number && number >= upper_bound);
+}
 
 int main()
 {
@@ -1118,7 +1131,8 @@ int main()
 //	cudaDeviceSynchronize();
 	
 	
-	string message = "0123456789ABCDEF", key = "0000000000000000";
+	//string message = "0123456789ABCDEF", key = "0000000000000000";
+	string message = "0123456789ABCDEF", key = "00000000000000";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
@@ -1126,27 +1140,29 @@ int main()
 	cudaDeviceSynchronize();
 
 
+//	for (int i = 0; i < 56; ++i)
+//	{
+//		if (inRange(PC_1[i], 0, 7))
+//			printf("%i,", PC_1[i]);
+//		else if (inRange(PC_1[i], 8, 15))
+//			printf("%i,", PC_1[i] - 1);
+//		else if (inRange(PC_1[i], 16, 23))
+//			printf("%i,", PC_1[i] - 2);
+//		else if (inRange(PC_1[i], 24, 31))
+//			printf("%i,", PC_1[i] - 3);
+//		else if (inRange(PC_1[i], 32, 39))
+//			printf("%i,", PC_1[i] - 4);
+//		else if (inRange(PC_1[i], 40, 47))
+//			printf("%i,", PC_1[i] - 5);
+//		else if (inRange(PC_1[i], 48, 55))
+//			printf("%i,", PC_1[i] - 5);
+//		else if (inRange(PC_1[i], 56, 64))
+//			printf("%i,", PC_1[i] - 6);
+//		else
+//			printf("%s", "PIMPUŒ");
+//	}
 
-//	const int arraySize = 5;
-//	const int a[arraySize] = { 1, 2, 3, 4, 5 };
-//	const int b[arraySize] = { 10, 20, 30, 40, 50 };
-//	int c[arraySize] = { 0 };
-//
-//	// Add vectors in parallel.
-//	cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "addWithCuda failed!");
-//		return 1;
-//	}
-//
-//
-//	// cudaDeviceReset must be called before exiting in order for profiling and
-//	// tracing tools such as Nsight and Visual Profiler to show complete traces.
-//	cudaStatus = cudaDeviceReset();
-//	if (cudaStatus != cudaSuccess) {
-//		fprintf(stderr, "cudaDeviceReset failed!");
-//		return 1;
-//	}
+
 
 	return 0;
 }
