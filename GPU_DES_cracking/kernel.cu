@@ -793,12 +793,10 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 		if (compareArrays(msg_ret, cyphertext_binary))
 		{
 			key_cracked = 1;
+			printf("%s", "USED KEY IS: ");
 			for (int i = 0; i < possible_key_binary_size; i++)
 				printf("%i", possible_key_binary[i]);
-			if (true)
-			{
-				asm("trap;");            // kill kernel with error
-			}
+			printf("\n");
 		}
 	}
 }
