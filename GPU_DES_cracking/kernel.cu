@@ -15,49 +15,6 @@ typedef unsigned char BYTE;
 
 using namespace std;
 
-
-////////////////////////////////////////////////////
-//int S1[4][16] = { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
-//{ 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8 },
-//{ 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
-//{ 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } };
-//
-//int S2[4][16] = { { 15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10 },
-//{ 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
-//{ 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15, },
-//{ 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } };
-//
-//int S3[4][16] = { { 10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8 },
-//{ 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
-//{ 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
-//{ 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } };
-//
-//int S4[4][16] = { { 7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15 },
-//{ 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9 },
-//{ 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4 },
-//{ 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14 } };
-//
-//int S5[4][16] = { { 2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9 },
-//{ 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6 },
-//{ 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14 },
-//{ 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3 } };
-//
-//int S6[4][16] = { { 12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11 },
-//{ 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8 },
-//{ 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6 },
-//{ 4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } };
-//
-//int S7[4][16] = { { 4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1 },
-//{ 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
-//{ 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
-//{ 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } };
-//
-//int S8[4][16] = { { 13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7 },
-//{ 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
-//{ 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
-//{ 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } };
-
-
 int PC_1_size = 56, shifts_size = 16, PC_2_size = 48, IP_size = 64, E_size = 48, S_size_1 = 8, S_size_2 = 4, S_size_3 = 16, P_size = 32, IP_1_size = 64;
 
 //
@@ -366,7 +323,7 @@ __device__ void expand(int R[], int tab_ret[], const int E[], int E_size)
 		tab_ret[i] = R[E[i]];
 }
 
-__device__ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
+__device__ void xorArray(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 {
 	for (int i = 0; i < tab_size; i++)
 		tab_ret[i] = (int)(!first_tab[i] != !second_tab[i]);
@@ -402,7 +359,7 @@ __device__ void f(int R[], int K[], int ret_tab[])
 //	cout << endl << endl << endl;
 	
 	int xored[48];
-	xor (K, R_expanded, 48, xored);
+	xorArray (K, R_expanded, 48, xored);
 	//DEBUG
 //	for(int i = 0; i < 48; i++)
 //	{
@@ -496,7 +453,7 @@ __device__ void messageEncode(int message_binary[], int message_size, int K[][48
 //		}
 //		cout << endl << endl << endl;
 
-		xor(prev_L, tmp_f, 32, R);
+		xorArray(prev_L, tmp_f, 32, R);
 
 		//DEBUG
 //		for(int i = 0; i < 32; i++)
@@ -782,7 +739,7 @@ __host__ __device__ void consecutiveKeyGenerator(unsigned long long &present_key
 	for (int i = 0; i < next_key_binary_size; i++)
 		next_key_binary[i] = 0;
 	decimal2Binary(present_key, next_key_binary, 0);
-	present_key++;
+//	present_key++;
 }
 
 __host__ __device__ bool compareArrays(int message[], int cyphertext[])
@@ -838,6 +795,10 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 			key_cracked = 1;
 			for (int i = 0; i < possible_key_binary_size; i++)
 				printf("%i", possible_key_binary[i]);
+			if (true)
+			{
+				asm("trap;");            // kill kernel with error
+			}
 		}
 	}
 }
@@ -865,10 +826,10 @@ void crackDes(string message, string cyphertext)
 	cudaMemcpy(d_cyphertext_binary, h_cyphertext_binary, h_cyphertext_binary_size * sizeof(int), cudaMemcpyHostToDevice);
 
 	const int threads_per_block = 1024; //2^10
-	//const int nbr_of_block_in_one_dim = 8192; //2 ^ 13;
+	const int nbr_of_block_in_one_dim = 8192; //2 ^ 13;
 	const int test_nbr_of_block = 32768; //2 ^ 15
-	unsigned long long computation_size = pow(2, 46) / (test_nbr_of_block);
-	crackDes<<<test_nbr_of_block, threads_per_block>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size, computation_size);
+	unsigned long long computation_size = pow(2, 46) / (nbr_of_block_in_one_dim);
+	crackDes<<<nbr_of_block_in_one_dim, threads_per_block>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size, computation_size);
 
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
@@ -943,6 +904,7 @@ string desEncryption(string message, string key, char cyphertext[])
 //	printf("%s\n", "after DEBUG __host__ desEncryption");
 
 	desEncryption<<<1, 1>>>(d_message_binary, d_key_binary, 64, d_msg_ret);
+
 	cudaDeviceSynchronize();
 
 	int* h_msg_ret = (int*)malloc(64 * sizeof(int));
@@ -991,21 +953,35 @@ void printArray(int array[], int size)
 	{
 		cout << array[i];
 	}
+	cout << "\n";
 }
 
 void tests()
 {
 	unsigned long long last = 10;
-	int key_binary[56];
 	for(unsigned long long i = 0; i < last; i++)
 	{
+		int key_binary[56];
 		consecutiveKeyGenerator(i, key_binary, 56);
+		cout << "\t" << i << "\n";
 		printArray(key_binary, 56);
 	}
+
+
+	cout << "PTYŒ" << endl;
+	string key = "10000000000000";
+	string str_key = hex2Bin(key);
+	int h_key_binary_size = 56;
+	int h_key_binary[56];
+	str2Int(str_key, h_key_binary, h_key_binary_size);
+	printArray(h_key_binary, h_key_binary_size);
 }
 
 int main()
 {
+
+//	tests();
+
 	size_t size_heap, size_stack;
 	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000 * sizeof(double));
 	cudaDeviceSetLimit(cudaLimitStackSize, 12928);
@@ -1017,7 +993,7 @@ int main()
 
 	
 	//string message = "0123456789ABCDEF", key = "0000000000000000";
-	string message = "0123456789ABCDEF", key = "00000000000001";
+	string message = "0123456789ABCDEF", key = "00000000000000";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
