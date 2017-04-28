@@ -15,8 +15,6 @@ typedef unsigned char BYTE;
 
 using namespace std;
 
-cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
-
 
 ////////////////////////////////////////////////////
 //int S1[4][16] = { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
@@ -71,6 +69,7 @@ int PC_1_size = 56, shifts_size = 16, PC_2_size = 48, IP_size = 64, E_size = 48,
 //29, 21, 13, 5, 60, 52, 44, 36,
 //28, 20, 12, 4, 27, 19, 11, 3 };
 
+__device__ int key_cracked = 0;
 
 const int PC_1[56] = { 49, 42, 35, 28, 21, 14, 7, 0,
 50, 43, 36, 29, 22, 15, 8, 1,
@@ -373,22 +372,6 @@ __device__ void xor(int first_tab[], int second_tab[], int tab_size, int tab_ret
 		tab_ret[i] = (int)(!first_tab[i] != !second_tab[i]);
 
 }
-
-//-->
-//__device__ long long binary2Decimal(int binary_int[], int tab_length)
-//{
-//	/*string int_string = "";
-//
-//	for (int i = 0; i < tab_length; i++)
-//		int_string += to_string(binary_int[i]);
-//	stringstream ss;
-//	ss << int_string;
-//	string str = ss.str();
-//	unsigned long long value = std::stoull(str, 0, 2);
-//	//std::cout << value << std::endl;
-//	*/
-//	return 0;
-//}
 
 __device__ long long binary2Decimal(int binary_int[], int tab_length)
 {
@@ -794,47 +777,6 @@ string getHexStringFromBinaryString(string sHex)
 
 }
 
-
-string desEncryption(string message2Encrypt, string key, DesStringBase base)
-{
-	//TODO implement different bases
-	string str_message = hex2Bin(message2Encrypt);
-	int message_binary_size = 64;
-	int message_binary[64];
-	str2Int(str_message, message_binary, message_binary_size);
-	string str_key = hex2Bin(key);
-	int key_binary_size = 64;
-	int key_binary[64];
-	str2Int(str_key, key_binary, key_binary_size);
-
-
-	if(base == Decimal)
-	{
-		//TODO implement decimal to hex
-	}
-
-	int msg_ret[64];
-	//ANKOMENT MI
-//	desEncryption(message_binary, message_binary_size, key_binary, key.size(), msg_ret);
-	//ANKOMENT MI
-	
-	//DEBUG
-	//	for (int i = 0; i < 64; i++)
-	//	{
-	//		if (!(i % 8))
-	//			cout << " ";
-	//		cout << msg_ret[i];
-	//	}
-
-	string binary;
-	for (int i = 0; i < 64; i++)
-		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
-	//DEBUG
-	//cout << binary;
-
-	return getHexStringFromBinaryString(binary);
-}
-
 __host__ __device__ void consecutiveKeyGenerator(unsigned long long &present_key, int next_key_binary[], int next_key_binary_size)
 {
 	for (int i = 0; i < next_key_binary_size; i++)
@@ -857,75 +799,47 @@ __host__ __device__ bool compareArrays(int message[], int cyphertext[])
 
 
 __global__ 
-void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size)
+void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size, unsigned long long computation_size)
 {
 //	printf("%s\n", "__global__ cracDes");
 
-	int possible_key_binary_size = 56;
-	int possible_key_binary[56];
-	unsigned long long present_key = 0;
-	consecutiveKeyGenerator(present_key, possible_key_binary, possible_key_binary_size);
+	
+	
 	//DEBUG
 //	for (int i = 0; i < possible_key_binary_size; ++i)
 //	{
 //		printf("%i", possible_key_binary[i]);
 //	}
 	
-	unsigned long long last_key;
 	int msg_ret[64];
 	
 //	printf("%s\n", "BEFORE desEncryption");
+	
+	int possible_key_binary_size = 56;
+	int possible_key_binary[56];
+	unsigned long long present_key = blockIdx.x * blockDim.x + threadIdx.x;
+	unsigned long long last_key = present_key + computation_size;
 
-	desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
-
-//	printf("%s\n", "AFTER desEncryption");
-
-	if (compareArrays(msg_ret, cyphertext_binary))
-		printf("%s\n", "true");
-	else
-		printf("%s\n", "false");
-
-	if (compareArrays(msg_ret, cyphertext_binary))
-		for (int i = 0; i < possible_key_binary_size; i++)
-			printf("%i", possible_key_binary[i]);
-	printf("\n");
-}
-
-//__host__ 
-void IReportU(int message_binary[], int cyphertext_binary[], int message_binary_size)
-{
-	printf("%s\n", "__global__ cracDes");
-
-	int possible_key_binary_size = 64;
-	int possible_key_binary[64];
-	unsigned long long present_key = 0;
-	consecutiveKeyGenerator(present_key, possible_key_binary, possible_key_binary_size);
-	//DEBUG
-	int i;
-		for (i = 0; i < possible_key_binary_size; ++i)
+	//unsigned long long temp = present_key + 2147483648;
+	for (unsigned long long i = present_key; i < last_key; i++)
+	{
+		if (key_cracked == 1)
 		{
-			printf("%i", possible_key_binary[i]);
+	//		printf("%i", key_cracked);
+			return;
 		}
-	//	printf("%i", i);
+		consecutiveKeyGenerator(i, possible_key_binary, possible_key_binary_size);
 
-	unsigned long long last_key;
-	int msg_ret[64];
+		desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
+		//	printf("%s\n", "AFTER desEncryption");
 
-	printf("%s\n", "BEFORE desEncryption");
-//ANKOMENT MI
-//	desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
-//ANKOMENT MI
-	printf("%s\n", "AFTER desEncryption");
-
-	if (compareArrays(msg_ret, cyphertext_binary))
-		printf("%s\n", "true");
-	else
-		printf("%s\n", "false");
-
-	if (compareArrays(msg_ret, cyphertext_binary))
-		for (int i = 0; i < possible_key_binary_size; i++)
-			printf("%i", possible_key_binary[i]);
-	printf("\n");
+		if (compareArrays(msg_ret, cyphertext_binary))
+		{
+			key_cracked = 1;
+			for (int i = 0; i < possible_key_binary_size; i++)
+				printf("%i", possible_key_binary[i]);
+		}
+	}
 }
 
 
@@ -950,9 +864,11 @@ void crackDes(string message, string cyphertext)
 	cudaMalloc((void**)&d_cyphertext_binary, h_cyphertext_binary_size * sizeof(int));
 	cudaMemcpy(d_cyphertext_binary, h_cyphertext_binary, h_cyphertext_binary_size * sizeof(int), cudaMemcpyHostToDevice);
 
-	//IReportU(h_message_binary, h_cyphertext_binary, h_message_binary_size);
-	//TEST1<<<1, 1 >>>();
-	crackDes<<<1, 1>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size);
+	const int threads_per_block = 1024; //2^10
+	//const int nbr_of_block_in_one_dim = 8192; //2 ^ 13;
+	const int test_nbr_of_block = 32768; //2 ^ 15
+	unsigned long long computation_size = pow(2, 46) / (test_nbr_of_block);
+	crackDes<<<test_nbr_of_block, threads_per_block>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size, computation_size);
 
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
@@ -991,9 +907,9 @@ void desEncryption(int message_binary[], int key_binary[], int message_binary_si
 //	}
 //	printf("%s\n", "after DEBUG __global__ desEncryption MSG_RET");
 
-
-
 }
+
+
 __host__
 string desEncryption(string message, string key, char cyphertext[])
 {
@@ -1064,72 +980,41 @@ void initArrays()
 
 }
 
-__global__ void arrayCheck(int size1, int size2, int size3)
-{
-	for (int i = 0; i < size1; i++)
-	{
-		for (int j = 0; j < size2; j++)
-		{
-			for (int k = 0; k < size3; ++k)
-			{
-				printf("%i,", d_S[i][j][k]);
-			}
-			printf("\n");
-		}
-		printf("\n\n");
-	}
-		
-}
-
-long long b2D(int binary_int[], int tab_length)
-{
-	string int_string = "";
-
-	for (int i = 0; i < tab_length; i++)
-		int_string += to_string(binary_int[i]);
-	stringstream ss;
-	ss << int_string;
-	string str = ss.str();
-	unsigned long long value = std::stoull(str, 0, 2);
-	//std::cout << value << std::endl;
-	return value;
-}
-
-
-
-
-void reimmplemnt()
-{
-//	int b1[] = {1, 1, 1, 1, 1, 1, 0, 0, 0,1 ,0 ,0, 1, 1  };
-//	long long b2D1 = b2D(b1, 14), B1 = B(b1, 14);
-//	printf("%i\n", b2D1);
-//	printf("%i\n", B1);
-
-
-}
-
-
 bool inRange(int number, int lower_bound, int upper_bound)
 {
 	return (lower_bound <= number && number >= upper_bound);
 }
 
+void printArray(int array[], int size)
+{
+	for (int i = 0; i < size; ++i)
+	{
+		cout << array[i];
+	}
+}
+
+void tests()
+{
+	unsigned long long last = 10;
+	int key_binary[56];
+	for(unsigned long long i = 0; i < last; i++)
+	{
+		consecutiveKeyGenerator(i, key_binary, 56);
+		printArray(key_binary, 56);
+	}
+}
+
 int main()
 {
-
 	size_t size_heap, size_stack;
 	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000 * sizeof(double));
 	cudaDeviceSetLimit(cudaLimitStackSize, 12928);
 	cudaDeviceGetLimit(&size_heap, cudaLimitMallocHeapSize);
 	cudaDeviceGetLimit(&size_stack, cudaLimitStackSize);
 //	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
-//	reimmplemnt();
 	initArrays();
 
-	
-	//	arrayCheck << <1, 1 >> > (S_size_1, S_size_2, S_size_3);
-//	cudaDeviceSynchronize();
-	
+
 	
 	//string message = "0123456789ABCDEF", key = "0000000000000000";
 	string message = "0123456789ABCDEF", key = "00000000000001";
@@ -1140,32 +1025,9 @@ int main()
 	cudaDeviceSynchronize();
 
 
-//	for (int i = 0; i < 56; ++i)
-//	{
-//		if (inRange(PC_1[i], 0, 7))
-//			printf("%i,", PC_1[i]);
-//		else if (inRange(PC_1[i], 8, 15))
-//			printf("%i,", PC_1[i] - 1);
-//		else if (inRange(PC_1[i], 16, 23))
-//			printf("%i,", PC_1[i] - 2);
-//		else if (inRange(PC_1[i], 24, 31))
-//			printf("%i,", PC_1[i] - 3);
-//		else if (inRange(PC_1[i], 32, 39))
-//			printf("%i,", PC_1[i] - 4);
-//		else if (inRange(PC_1[i], 40, 47))
-//			printf("%i,", PC_1[i] - 5);
-//		else if (inRange(PC_1[i], 48, 55))
-//			printf("%i,", PC_1[i] - 5);
-//		else if (inRange(PC_1[i], 56, 64))
-//			printf("%i,", PC_1[i] - 6);
-//		else
-//			printf("%s", "PIMPUŒ");
-//	}
-
-
-
 	return 0;
 }
+
 
 
 
