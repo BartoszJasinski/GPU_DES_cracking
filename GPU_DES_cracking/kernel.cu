@@ -975,24 +975,26 @@ void tests()
 	printArray(h_key_binary, h_key_binary_size);
 }
 
-int main()
+void resizeGPUHeap()
 {
-
-	//	tests();
-
-	//cudaSetDevice(3); //uncomment when using gpunode1
 	size_t size_heap, size_stack;
 	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000 * sizeof(double));
 	cudaDeviceSetLimit(cudaLimitStackSize, 12928);
 	cudaDeviceGetLimit(&size_heap, cudaLimitMallocHeapSize);
 	cudaDeviceGetLimit(&size_stack, cudaLimitStackSize);
 	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
+
+}
+
+int main()
+{
+	//cudaSetDevice(3); //uncomment when using gpunode1
+	resizeGPUHeap();
 	initArrays();
 
 
-
 	//string message = "0123456789ABCDEF", key = "0000000000000000";
-	string message = "0123456789ABCDEF", key = "01000000000000";
+	string message = "0123456789ABCDEF", key = "0B000000000000";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
