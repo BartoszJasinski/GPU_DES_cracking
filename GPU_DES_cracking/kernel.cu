@@ -1,4 +1,3 @@
-
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
@@ -34,7 +33,7 @@ const int PC_1[56] = { 49, 42, 35, 28, 21, 14, 7, 0,
 52, 45, 38, 31, 55, 48, 41, 34,
 27, 20, 13, 6, 54, 47, 40, 33,
 26, 19, 12, 5, 53, 46, 39, 32,
-25, 18, 11, 4, 24, 17, 10, 3};
+25, 18, 11, 4, 24, 17, 10, 3 };
 
 
 const int shifts[16] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
@@ -67,58 +66,58 @@ const int E[48] = { 31, 0, 1, 2, 3, 4,
 23, 24, 25, 26, 27, 28,
 27, 28, 29, 30, 31, 0 };
 
-const int S[8][4][16] = { { {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
-{0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8},
-{4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
-{15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } }, 
-	{ {15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10},
-{3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
-{0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15 },
-{13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } }, 
-	{ {10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8},
-{13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
-{13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
-{1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } }, 
-	{ {7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15},
-{13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9},
-{10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4},
-{3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14} }, 
-	{ {2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9},
-{14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6},
-{4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14},
-{11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3} }, 
-	{ {12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11},
-{10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8 },
-{9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6 },
-{4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } },
-	{ {4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1},
-{13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
-{1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
-{6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } },
-	{ {13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7},
-{1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
-{7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
-{2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } }
+const int S[8][4][16] = { { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
+{ 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8 },
+{ 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
+{ 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } },
+{ { 15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10 },
+{ 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
+{ 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15 },
+{ 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } },
+{ { 10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8 },
+{ 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
+{ 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
+{ 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } },
+{ { 7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15 },
+{ 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9 },
+{ 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4 },
+{ 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14 } },
+{ { 2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9 },
+{ 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6 },
+{ 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14 },
+{ 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3 } },
+{ { 12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11 },
+{ 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8 },
+{ 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6 },
+{ 4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } },
+{ { 4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1 },
+{ 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
+{ 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
+{ 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } },
+{ { 13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7 },
+{ 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
+{ 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
+{ 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } }
 };
 
 const int P[] = { 15, 6, 19, 20,
-	28, 11, 27, 16,
-	0, 14, 22, 25,
-	4, 17, 30, 9,
-	1, 7, 23, 13,
-	31, 26, 2, 8,
-	18, 12, 29, 5,
-	21, 10, 3, 24 };
+28, 11, 27, 16,
+0, 14, 22, 25,
+4, 17, 30, 9,
+1, 7, 23, 13,
+31, 26, 2, 8,
+18, 12, 29, 5,
+21, 10, 3, 24 };
 
 const int IP_1[] = {
-39, 7, 47, 15, 55, 23, 63, 31,
-38, 6, 46, 14, 54, 22, 62, 30,
-37, 5, 45, 13, 53, 21, 61, 29,
-36, 4, 44, 12, 52, 20, 60, 28,
-35, 3, 43, 11, 51, 19, 59, 27,
-34, 2, 42, 10, 50, 18, 58, 26,
-33, 1, 41, 9, 49, 17, 57, 25,
-32, 0, 40, 8, 48, 16, 56, 24 };
+	39, 7, 47, 15, 55, 23, 63, 31,
+	38, 6, 46, 14, 54, 22, 62, 30,
+	37, 5, 45, 13, 53, 21, 61, 29,
+	36, 4, 44, 12, 52, 20, 60, 28,
+	35, 3, 43, 11, 51, 19, 59, 27,
+	34, 2, 42, 10, 50, 18, 58, 26,
+	33, 1, 41, 9, 49, 17, 57, 25,
+	32, 0, 40, 8, 48, 16, 56, 24 };
 
 
 
@@ -219,7 +218,7 @@ __constant__ int d_IP_1[] = {
 
 void fun()
 {
-	for(int i = 0; i < 56; i++)
+	for (int i = 0; i < 56; i++)
 	{
 		cout << d_PC_1[i] - 1 << ", ";
 
@@ -230,7 +229,7 @@ void fun()
 
 template< typename T, size_t N, size_t M >
 void printArray(T(&theArray)[N][M], int char_endl_nbr) {
-	for (int x = 0; x < N; x++) 
+	for (int x = 0; x < N; x++)
 	{
 		for (int y = 0; y < M; y++)
 		{
@@ -269,13 +268,13 @@ __device__ void createSubkeys(int key[], const int key_size, int C[], int D[], i
 {
 	const int size = key_size / 2;
 	int tmp_C[28], tmp_D[28];
-	for(int i = 0; i < key_size / 2; i++)
+	for (int i = 0; i < key_size / 2; i++)
 	{
 		tmp_C[i] = key[i];
 		tmp_D[i] = key[i + CD_size];
 	}
 
-	for(int i = 0; i < CD_size; i++)
+	for (int i = 0; i < CD_size; i++)
 	{
 		C[i] = tmp_C[(i + d_shifts[run_number]) % CD_size];
 		D[i] = tmp_D[(i + d_shifts[run_number]) % CD_size];
@@ -308,7 +307,7 @@ __device__ void reverseTab(int tab[], int tab_length)
 
 __device__ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 {
-	for(int i = 0; i < key_size; i++)
+	for (int i = 0; i < key_size; i++)
 	{
 		key_ret[i] = leftKey[i];
 		key_ret[i + key_size] = rightKey[i];
@@ -350,29 +349,29 @@ __device__ void f(int R[], int K[], int ret_tab[])
 	int R_expanded[48];
 	expand(R, R_expanded, d_E, 48);
 	//DEBUG
-//	for (int i = 0; i < 48; i++)
-//	{
-//		if (!(i % 6))
-//			cout << " ";
-//		cout << R_expanded[i];
-//	}
-//	cout << endl << endl << endl;
-	
+	//	for (int i = 0; i < 48; i++)
+	//	{
+	//		if (!(i % 6))
+	//			cout << " ";
+	//		cout << R_expanded[i];
+	//	}
+	//	cout << endl << endl << endl;
+
 	int xored[48];
-	xorArray (K, R_expanded, 48, xored);
+	xorArray(K, R_expanded, 48, xored);
 	//DEBUG
-//	for(int i = 0; i < 48; i++)
-//	{
-//		if (!(i % 6))
-//			cout << " ";
-//		cout << xored[i];
-//	}
-//	cout << endl << endl << endl;
+	//	for(int i = 0; i < 48; i++)
+	//	{
+	//		if (!(i % 6))
+	//			cout << " ";
+	//		cout << xored[i];
+	//	}
+	//	cout << endl << endl << endl;
 
 
-	for(int i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 	{
-		int row[4] = {0, 0, 0, 0 }, column[4] = {0, 0, 0, 0};
+		int row[4] = { 0, 0, 0, 0 }, column[4] = { 0, 0, 0, 0 };
 		row[3] = xored[6 * i + 5];
 		row[2] = xored[6 * i];
 		column[0] = xored[6 * i + 1];
@@ -381,33 +380,33 @@ __device__ void f(int R[], int K[], int ret_tab[])
 		column[3] = xored[6 * i + 4];
 
 		int chunk_length = 4;
-		int R_chunk[4] = {0, 0, 0, 0};
+		int R_chunk[4] = { 0, 0, 0, 0 };
 		decimal2Binary(d_S[i][binary2Decimal(row, 4)][binary2Decimal(column, 4)], R_chunk, 0);
 		reverseTab(R_chunk, chunk_length);
-		for(int j = 0; j < chunk_length; j++)
+		for (int j = 0; j < chunk_length; j++)
 		{
 			R[4 * i + j] = R_chunk[j];
 		}
 
 	}
 	//DEBUG
-//	for(int i = 0; i < 32; i++)
-//	{
-//		if (!(i % 4))
-//			cout << " ";
-//		cout << R[i];
-//	}
-//	cout << endl << endl << endl;
-		
+	//	for(int i = 0; i < 32; i++)
+	//	{
+	//		if (!(i % 4))
+	//			cout << " ";
+	//		cout << R[i];
+	//	}
+	//	cout << endl << endl << endl;
+
 	permutePC(R, ret_tab, 32, d_P);
 	//DEBUG
-//	for (int i = 0; i < 32; i++)
-//	{
-//		if (!(i % 4))
-//			cout << " ";
-//		cout << ret_tab[i];
-//	}
-//	cout << endl << endl << endl;
+	//	for (int i = 0; i < 32; i++)
+	//	{
+	//		if (!(i % 4))
+	//			cout << " ";
+	//		cout << ret_tab[i];
+	//	}
+	//	cout << endl << endl << endl;
 
 }
 
@@ -424,7 +423,7 @@ __device__ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 __device__ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
 {
 	int L[32], R[32];
-	for(int i = 0; i < message_size / 2; i++)
+	for (int i = 0; i < message_size / 2; i++)
 	{
 		L[i] = message_binary[i];
 		R[i] = message_binary[i + message_size / 2];
@@ -437,35 +436,35 @@ __device__ void messageEncode(int message_binary[], int message_size, int K[][48
 		prev_R[i] = R[i];
 	}
 
-	for(int i = 0; i < 16; i++)
-	{	
+	for (int i = 0; i < 16; i++)
+	{
 		for (int j = 0; j < message_size / 2; j++)
 			L[j] = prev_R[j];
 
 		int tmp_f[32];
 		f(prev_R, K[i], tmp_f);
 		//DEBUG
-//		for (int i = 0; i < 32; i++)
-//		{
-//			if (!(i % 4))
-//				cout << " ";
-//			cout << tmp_f[i];
-//		}
-//		cout << endl << endl << endl;
+		//		for (int i = 0; i < 32; i++)
+		//		{
+		//			if (!(i % 4))
+		//				cout << " ";
+		//			cout << tmp_f[i];
+		//		}
+		//		cout << endl << endl << endl;
 
 		xorArray(prev_L, tmp_f, 32, R);
 
 		//DEBUG
-//		for(int i = 0; i < 32; i++)
-//		{
-//			if (!(i % 4))
-//				cout << " ";
-//			cout << R[i];
-//		}
-//		cout << endl << endl << endl;
+		//		for(int i = 0; i < 32; i++)
+		//		{
+		//			if (!(i % 4))
+		//				cout << " ";
+		//			cout << R[i];
+		//		}
+		//		cout << endl << endl << endl;
 
 		//przepisanie R i L do prev_R i prev_L
-		for(int j = 0; j < message_size / 2; j++)
+		for (int j = 0; j < message_size / 2; j++)
 		{
 			prev_L[j] = L[j];
 			prev_R[j] = R[j];
@@ -475,23 +474,23 @@ __device__ void messageEncode(int message_binary[], int message_size, int K[][48
 	int msg[64];
 	reverse(L, R, 32, msg);
 	//DEBUG
-//	for (int i = 0; i < 64; i++)
-//	{
-//		if (!(i % 8))
-//			cout << " ";
-//		cout << msg[i];
-//	}
-	
+	//	for (int i = 0; i < 64; i++)
+	//	{
+	//		if (!(i % 8))
+	//			cout << " ";
+	//		cout << msg[i];
+	//	}
+
 	permutePC(msg, msg_ret, 64, d_IP_1);
 	//DEBUG
-//	for(int i = 0; i < 64; i++)
-//	{
-//		if (!(i % 8))
-//			cout << " ";
-//		cout << msg_ret[i];
-//	}	
+	//	for(int i = 0; i < 64; i++)
+	//	{
+	//		if (!(i % 8))
+	//			cout << " ";
+	//		cout << msg_ret[i];
+	//	}	
 
-}	 
+}
 
 
 
@@ -504,43 +503,43 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 	int des_block_size_bits = 64;
 
 	//DEBUG
-//	printf("\n%s\n", "__device__ desEncryption ");
-//	printf("%s\n", "message_binary");
-//	for (int i = 0; i < message_size; ++i)
-//	{
-//		printf("%i", message_binary[i]);
-//	}
-//		cout << message.size();
-//		cout << "\n" << message << "\n";
-//if (message.size() * CHAR_BIT != des_block_size_bits)
-//		cout << message.size() * CHAR_BIT;
-		
+	//	printf("\n%s\n", "__device__ desEncryption ");
+	//	printf("%s\n", "message_binary");
+	//	for (int i = 0; i < message_size; ++i)
+	//	{
+	//		printf("%i", message_binary[i]);
+	//	}
+	//		cout << message.size();
+	//		cout << "\n" << message << "\n";
+	//if (message.size() * CHAR_BIT != des_block_size_bits)
+	//		cout << message.size() * CHAR_BIT;
+
 
 	if (message_size % des_block_size_bytes)
 	{
 		//int tmp_message_binary[message_size + des_block_size_bytes - (message_size % des_block_size_bytes)]
-			printf("%s\n", "KICIA");
-	//	message_binary.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
+		printf("%s\n", "KICIA");
+		//	message_binary.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
 	}
 
 	//OLD Verwsion with message as string 
-//	if (message.size() % des_block_size_bytes)
-//		message.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
+	//	if (message.size() % des_block_size_bytes)
+	//		message.append(des_block_size_bytes - (message.size() % des_block_size_bytes), '0');//mayby another char to append  
 
 	//DEBUG
-//		cout << "\n" << message << "\n";
-//		cout << message.size();
+	//		cout << "\n" << message << "\n";
+	//		cout << message.size();
 
 	int key_binary_ret[56];
 	permutePC(key_binary, key_binary_ret, sizeof(key_binary_ret) / sizeof(key_binary_ret[0]), d_PC_1);
 
 	//DEBUG
-//	for (int i = 0; i < 56; i++)
-//	{
-//		if (!(i % 7))
-//			cout << "\n";
-//		cout << key_binary_ret[i];
-//	}
+	//	for (int i = 0; i < 56; i++)
+	//	{
+	//		if (!(i % 7))
+	//			cout << "\n";
+	//		cout << key_binary_ret[i];
+	//	}
 
 	int subkeys_number = 17;
 	int subkey_size = 28;
@@ -550,46 +549,46 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 	for (int i = 0; i < 56; i++)
 		subkeys[0][i] = key_binary_ret[i];
 
-	for(int i = 0; i < subkeys_number - 1; i++)
+	for (int i = 0; i < subkeys_number - 1; i++)
 	{
 		createSubkeys(subkeys[i], sizeof(key_binary_ret) / sizeof(key_binary_ret[0]), C, D, sizeof(C) / sizeof(C[0]), i);
 		appendKeys(C, D, subkey_size, subkeys[i + 1]);
 		//DEBUG
-//		for(int i = 0; i < subkeys_number; i++)
-//			for(int j = 0; j < 56; j++)
-//				cout << 
-//		for (int i = 0; i < 28; i++)
-//		{
-//			cout << C[i];
-//		}
-//		cout << endl;
-//		for (int i = 0; i < 28; i++)
-//		{
-//			cout << D[i];
-//		}
-//		cout << endl;
+		//		for(int i = 0; i < subkeys_number; i++)
+		//			for(int j = 0; j < 56; j++)
+		//				cout << 
+		//		for (int i = 0; i < 28; i++)
+		//		{
+		//			cout << C[i];
+		//		}
+		//		cout << endl;
+		//		for (int i = 0; i < 28; i++)
+		//		{
+		//			cout << D[i];
+		//		}
+		//		cout << endl;
 
 	}
 
 	//DEBUG
-//	printArray(subkeys, 1000);
+	//	printArray(subkeys, 1000);
 
 	int K[16][48];
-	for(int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		permutePC(subkeys[i + 1], K[i], sizeof(K[0]) / sizeof(K[0][0]), d_PC_2);
 	}
 
 	//DEBUG
-//	printArray2(K, 10000);
+	//	printArray2(K, 10000);
 
 	//WARNING!!! message size 
 	int message_binary_ret[64];
 	permutePC(message_binary, message_binary_ret, message_size, d_IP);
 
 	//DEBUG
-//	for(int i = 0; i < message_size; i++)
-//		cout << message_binary_ret[i];
+	//	for(int i = 0; i < message_size; i++)
+	//		cout << message_binary_ret[i];
 	messageEncode(message_binary_ret, message_size, K, msg_ret);
 
 }
@@ -597,7 +596,7 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 
 void bytes2Bits(vector<BYTE> bytes, int bits[])
 {
-	for(int i = 0; i < bytes.size(); i++)
+	for (int i = 0; i < bytes.size(); i++)
 	{
 		BYTE cur = bytes[i];
 		int offset = i * CHAR_BIT;
@@ -631,7 +630,7 @@ vector<BYTE> hex2Byte(string string_hex)
 
 enum DesStringBase
 {
-	Decimal, 
+	Decimal,
 	Hex,
 	Binary//not implemented 
 };
@@ -641,22 +640,22 @@ const char* hexChar2Bin(char c)
 	// TODO handle default / error
 	switch (toupper(c))
 	{
-		case '0': return "0000";
-		case '1': return "0001";
-		case '2': return "0010";
-		case '3': return "0011";
-		case '4': return "0100";
-		case '5': return "0101";
-		case '6': return "0110";
-		case '7': return "0111";
-		case '8': return "1000";
-		case '9': return "1001";
-		case 'A': return "1010";
-		case 'B': return "1011";
-		case 'C': return "1100";
-		case 'D': return "1101";
-		case 'E': return "1110";
-		case 'F': return "1111";
+	case '0': return "0000";
+	case '1': return "0001";
+	case '2': return "0010";
+	case '3': return "0011";
+	case '4': return "0100";
+	case '5': return "0101";
+	case '6': return "0110";
+	case '7': return "0111";
+	case '8': return "1000";
+	case '9': return "1001";
+	case 'A': return "1010";
+	case 'B': return "1011";
+	case 'C': return "1100";
+	case 'D': return "1101";
+	case 'E': return "1110";
+	case 'F': return "1111";
 	}
 }
 
@@ -696,10 +695,10 @@ string getHexStringFromBinaryString(string sHex)
 	{
 		string s = sHex.substr(bit_length * i, bit_length);
 
-		if(s == bins[0])
-			 sReturn.append("0");
+		if (s == bins[0])
+			sReturn.append("0");
 		if (s == bins[1])
-			 sReturn.append("1");
+			sReturn.append("1");
 		if (s == bins[2])
 			sReturn.append("2");
 		if (s == bins[3])
@@ -707,9 +706,9 @@ string getHexStringFromBinaryString(string sHex)
 		if (s == bins[4])
 			sReturn.append("4");
 		if (s == bins[5])
-			 sReturn.append("5");
+			sReturn.append("5");
 		if (s == bins[6])
-			 sReturn.append("6");
+			sReturn.append("6");
 		if (s == bins[7])
 			sReturn.append("7");
 		if (s == bins[8])
@@ -721,14 +720,14 @@ string getHexStringFromBinaryString(string sHex)
 		if (s == bins[11])
 			sReturn.append("B");
 		if (s == bins[12])
-			 sReturn.append("C");
+			sReturn.append("C");
 		if (s == bins[13])
-			 sReturn.append("D");
+			sReturn.append("D");
 		if (s == bins[14])
 			sReturn.append("E");
 		if (s == bins[15])
-			 sReturn.append("F");
-		}
+			sReturn.append("F");
+	}
 
 	return sReturn;
 
@@ -739,7 +738,7 @@ __host__ __device__ void consecutiveKeyGenerator(unsigned long long &present_key
 	for (int i = 0; i < next_key_binary_size; i++)
 		next_key_binary[i] = 0;
 	decimal2Binary(present_key, next_key_binary, 0);
-//	present_key++;
+	//	present_key++;
 }
 
 __host__ __device__ bool compareArrays(int message[], int cyphertext[])
@@ -755,23 +754,23 @@ __host__ __device__ bool compareArrays(int message[], int cyphertext[])
 
 
 
-__global__ 
+__global__
 void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_size, unsigned long long computation_size)
 {
-//	printf("%s\n", "__global__ cracDes");
+	//printf("%s\n", "__global__ crackDes");
 
-	
-	
+
+
 	//DEBUG
-//	for (int i = 0; i < possible_key_binary_size; ++i)
-//	{
-//		printf("%i", possible_key_binary[i]);
-//	}
-	
+	//	for (int i = 0; i < possible_key_binary_size; ++i)
+	//	{
+	//		printf("%i", possible_key_binary[i]);
+	//	}
+
 	int msg_ret[64];
-	
-//	printf("%s\n", "BEFORE desEncryption");
-	
+
+	//	printf("%s\n", "BEFORE desEncryption");
+
 	int possible_key_binary_size = 56;
 	int possible_key_binary[56];
 	unsigned long long present_key = blockIdx.x * blockDim.x + threadIdx.x;
@@ -782,11 +781,11 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 	{
 		if (key_cracked == 1)
 		{
-	//		printf("%i", key_cracked);
+			//		printf("%i", key_cracked);
 			return;
 		}
 		consecutiveKeyGenerator(i, possible_key_binary, possible_key_binary_size);
-
+		//	printf("%s\n", "BEFORE desEncryption");
 		desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
 		//	printf("%s\n", "AFTER desEncryption");
 
@@ -802,7 +801,7 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 }
 
 
-__host__ 
+__host__
 void crackDes(string message, string cyphertext)
 {
 	string str_message = hex2Bin(message);
@@ -814,7 +813,7 @@ void crackDes(string message, string cyphertext)
 	int h_cyphertext_binary_size = 64;
 	int h_cyphertext_binary[64];
 	str2Int(str_cyphertext, h_cyphertext_binary, h_cyphertext_binary_size);
-	
+
 	int* d_message_binary = 0;
 	cudaMalloc((void**)&d_message_binary, h_message_binary_size * sizeof(int));
 	cudaMemcpy(d_message_binary, h_message_binary, h_message_binary_size * sizeof(int), cudaMemcpyHostToDevice);
@@ -823,12 +822,13 @@ void crackDes(string message, string cyphertext)
 	cudaMalloc((void**)&d_cyphertext_binary, h_cyphertext_binary_size * sizeof(int));
 	cudaMemcpy(d_cyphertext_binary, h_cyphertext_binary, h_cyphertext_binary_size * sizeof(int), cudaMemcpyHostToDevice);
 
-	const int threads_per_block = 1024; //2^10
+	const int threads_per_block = 512;//FERMI //1024; //2^10
 	const int nbr_of_block_in_one_dim = 8192; //2 ^ 13;
 	const int test_nbr_of_block = 32768; //2 ^ 15
-	unsigned long long computation_size = pow(2, 46) / (nbr_of_block_in_one_dim);
+	unsigned long long computation_size = pow(2, 47) / (nbr_of_block_in_one_dim);
+	printf("%s\n", "__host__ crackDes BEFORE __device__ crackDes");
 	crackDes<<<nbr_of_block_in_one_dim, threads_per_block>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size, computation_size);
-
+	printf("%s\n", "__host__ crackDes AFTER __device__ crackDes");
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -836,10 +836,10 @@ void crackDes(string message, string cyphertext)
 	//			cout << " ";
 	//		cout << msg_ret[i];
 	//	}
-		
-//	string binary;
-//	for (int i = 0; i < 64; i++)
-//		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
+
+	//	string binary;
+	//	for (int i = 0; i < 64; i++)
+	//		binary.push_back(std::to_string(msg_ret[i]).c_str()[0]);
 	//DEBUG
 	//cout << binary;
 
@@ -849,22 +849,22 @@ __global__
 void desEncryption(int message_binary[], int key_binary[], int message_binary_size, int msg_ret[])
 {
 	//DEBUG
-//	printf("%s\n", "before DEBUG __global__ desEncryption MESSAGE_BINARY");
-//	for (int i = 0; i < message_binary_size; ++i)
-//	{
-//		printf("%i", message_binary[i]);
-//	}
-//	printf("%s\n", "after DEBUG __global__ desEncryption MESSAGE_BINARY");
+	//	printf("%s\n", "before DEBUG __global__ desEncryption MESSAGE_BINARY");
+	//	for (int i = 0; i < message_binary_size; ++i)
+	//	{
+	//		printf("%i", message_binary[i]);
+	//	}
+	//	printf("%s\n", "after DEBUG __global__ desEncryption MESSAGE_BINARY");
 
 	//int msg_ret[64];
-//	printf("%s\n", "BEFORE desEncryption");							14 should be here
+	//	printf("%s\n", "BEFORE desEncryption");							14 should be here
 	desEncryption(message_binary, message_binary_size, key_binary, 16, msg_ret);
-//	printf("%s\n", "before DEBUG __global__ desEncryption MSG_RET");
-//	for (int i = 0; i < 64; ++i)
-//	{
-//		printf("%i", 123123123);
-//	}
-//	printf("%s\n", "after DEBUG __global__ desEncryption MSG_RET");
+	//	printf("%s\n", "before DEBUG __global__ desEncryption MSG_RET");
+	//	for (int i = 0; i < 64; ++i)
+	//	{
+	//		printf("%i", 123123123);
+	//	}
+	//	printf("%s\n", "after DEBUG __global__ desEncryption MSG_RET");
 
 }
 
@@ -894,26 +894,26 @@ string desEncryption(string message, string key, char cyphertext[])
 	cudaMalloc((void**)&d_msg_ret, 64 * sizeof(int));
 
 	//DEBUG
-//	printf("%s\n", "before DEBUG __host__ desEncryption");
-//	for (int i = 0; i < 64; ++i)
-//	{
-//		printf("%i", h_message_binary[i]);
-//	}
-//	printf("%s\n", "after DEBUG __host__ desEncryption");
+	//	printf("%s\n", "before DEBUG __host__ desEncryption");
+	//	for (int i = 0; i < 64; ++i)
+	//	{
+	//		printf("%i", h_message_binary[i]);
+	//	}
+	//	printf("%s\n", "after DEBUG __host__ desEncryption");
 
-	desEncryption<<<1, 1>>>(d_message_binary, d_key_binary, 64, d_msg_ret);
+	desEncryption << <1, 1 >> >(d_message_binary, d_key_binary, 64, d_msg_ret);
 
 	cudaDeviceSynchronize();
 
 	int* h_msg_ret = (int*)malloc(64 * sizeof(int));
 	cudaMemcpy(h_msg_ret, d_msg_ret, 64 * sizeof(int), cudaMemcpyDeviceToHost);
 	//DEBUG
-//	printf("\n%s\n", "before DEBUG __host__ desEncryption H_MSG_RET");
-//	for (int i = 0; i < 64; ++i)
-//	{
-//		printf("%i", h_msg_ret[i]);
-//	}
-//	printf("%s\n", "after DEBUG __host__ desEncryption H_MSG_RET");
+	//	printf("\n%s\n", "before DEBUG __host__ desEncryption H_MSG_RET");
+	//	for (int i = 0; i < 64; ++i)
+	//	{
+	//		printf("%i", h_msg_ret[i]);
+	//	}
+	//	printf("%s\n", "after DEBUG __host__ desEncryption H_MSG_RET");
 
 
 	string binary;
@@ -923,7 +923,7 @@ string desEncryption(string message, string key, char cyphertext[])
 	//cout << binary;
 
 	return getHexStringFromBinaryString(binary);
-		
+
 }
 
 
@@ -957,7 +957,7 @@ void printArray(int array[], int size)
 void tests()
 {
 	unsigned long long last = 10;
-	for(unsigned long long i = 0; i < last; i++)
+	for (unsigned long long i = 0; i < last; i++)
 	{
 		int key_binary[56];
 		consecutiveKeyGenerator(i, key_binary, 56);
@@ -966,7 +966,7 @@ void tests()
 	}
 
 
-	cout << "PTYŒ" << endl;
+	cout << "PTYS" << endl;
 	string key = "10000000000000";
 	string str_key = hex2Bin(key);
 	int h_key_binary_size = 56;
@@ -978,26 +978,30 @@ void tests()
 int main()
 {
 
-//	tests();
+	//	tests();
 
+	//cudaSetDevice(3); //uncomment when using gpunode1
 	size_t size_heap, size_stack;
 	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000 * sizeof(double));
 	cudaDeviceSetLimit(cudaLimitStackSize, 12928);
 	cudaDeviceGetLimit(&size_heap, cudaLimitMallocHeapSize);
 	cudaDeviceGetLimit(&size_stack, cudaLimitStackSize);
-//	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
+	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
 	initArrays();
 
 
-	
+
 	//string message = "0123456789ABCDEF", key = "0000000000000000";
-	string message = "0123456789ABCDEF", key = "00000000000000";
+	string message = "0123456789ABCDEF", key = "01000000000000";
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
 	crackDes(message, ct.c_str());
+	//	cout << "MAIN: AFTER crackDes";
 	cudaDeviceSynchronize();
 
+
+	cout << endl << "END main" << endl;
 
 	return 0;
 }
@@ -1097,20 +1101,3 @@ int main()
 
 //MESSAGE AFTER d_IP
 //1100110000000000110011001111111111110000101010101111000010101010
-
-
-
-//int main()
-//{
-//	string message = "0123456789ABCDEF", key = "133457799BBCDFF1";
-////	int message_binary[] = { 0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1};
-////	int key_binary[] = { 0,0,0,1,0,0,1,1, 0,0,1,1,0,1,0,0, 0,1,0,1,0,1,1,1, 0,1,1,1,1,0,0,1, 1,0,0,1,1,0,1,1, 1,0,1,1,1,1,0,0, 1,1,0,1,1,1,1,1, 1,1,1,1,0,0,0,1 };
-//	time_t start = time(nullptr);
-//	for(int i = 0; i < 2000; i++)
-//		string cyphertext = desEncryption(message, key, DesStringBase::Hex);
-//	time_t stop = time(nullptr);
-//
-//	cout << "\n\n\n" << difftime(stop, start);
-//
-//	return 0;
-//}
