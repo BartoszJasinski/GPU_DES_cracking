@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
-#include <bitset>
-#include <sstream>
 #include <stdlib.h>
 #include <vector>
 #include <iomanip>
@@ -529,22 +527,22 @@ const char* hexChar2Bin(char c)
 	// TODO handle default / error
 	switch (toupper(c))
 	{
-	case '0': return "0000";
-	case '1': return "0001";
-	case '2': return "0010";
-	case '3': return "0011";
-	case '4': return "0100";
-	case '5': return "0101";
-	case '6': return "0110";
-	case '7': return "0111";
-	case '8': return "1000";
-	case '9': return "1001";
-	case 'A': return "1010";
-	case 'B': return "1011";
-	case 'C': return "1100";
-	case 'D': return "1101";
-	case 'E': return "1110";
-	case 'F': return "1111";
+		case '0': return "0000";
+		case '1': return "0001";
+		case '2': return "0010";
+		case '3': return "0011";
+		case '4': return "0100";
+		case '5': return "0101";
+		case '6': return "0110";
+		case '7': return "0111";
+		case '8': return "1000";
+		case '9': return "1001";
+		case 'A': return "1010";
+		case 'B': return "1011";
+		case 'C': return "1100";
+		case 'D': return "1101";
+		case 'E': return "1110";
+		case 'F': return "1111";
 	}
 }
 
@@ -845,7 +843,9 @@ void printArray(int array[], int size)
 
 void tests()
 {
-	unsigned long long last = 10;
+	cout << sizeof(const int);
+
+	/*unsigned long long last = 10;
 	for (unsigned long long i = 0; i < last; i++)
 	{
 		int key_binary[56];
@@ -861,7 +861,7 @@ void tests()
 	int h_key_binary_size = 56;
 	int h_key_binary[56];
 	str2Int(str_key, h_key_binary, h_key_binary_size);
-	printArray(h_key_binary, h_key_binary_size);
+	printArray(h_key_binary, h_key_binary_size);*/
 }
 
 void resizeGPUHeap()
@@ -877,6 +877,8 @@ void resizeGPUHeap()
 
 int main()
 {
+//	tests();
+
 	//cudaSetDevice(3); //uncomment when using gpunode1
 	resizeGPUHeap();
 	initArrays();
@@ -887,7 +889,7 @@ int main()
 	char cyphertext[64];
 	string ct = desEncryption(message, key, cyphertext);
 	cout << ct << "\n";
-	crackDes(message, ct.c_str());
+//	crackDes(message, ct.c_str());
 	//	cout << "MAIN: AFTER crackDes";
 	cudaDeviceSynchronize();
 
