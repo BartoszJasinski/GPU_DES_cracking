@@ -757,7 +757,7 @@ void desEncryption(int message_binary[], int key_binary[], int message_binary_si
 
 
 __host__
-string desEncryption(string message, string key, char cyphertext[])
+string desEncryption(string message, string key)
 {
 	string str_message = hex2Bin(message);
 	int h_message_binary_size = 64;
@@ -875,21 +875,86 @@ void resizeGPUHeap()
 
 }
 
+__global__
+void d_tests()
+{
+	__shared__ int s_PC_1[56];
+	for (int i = 0; i < 56; ++i)
+	{
+		s_PC_1[i] = d_PC_1[i];
+	}
+
+	int dummy = 0;
+	for (int i = 0; i < 100000; ++i)
+	{
+		for (int j = 0; j < 56; ++j)
+		{
+			dummy += s_PC_1[j];
+			dummy -= s_PC_1[j];
+		}
+	}
+
+	printf("%i", dummy);
+}
+
+__global__
+void d_tests2()
+{
+	int dummy = 0;
+	for (int i = 0; i < 100000; ++i)
+	{
+		for (int j = 0; j < 56; ++j)
+		{
+			dummy += d_PC_1[j];
+			dummy -= d_PC_1[j];
+		}
+	}
+
+	printf("%i", dummy);
+
+}
+
+__global__
+void d_tests3()
+{
+	__shared__ volatile int s_PC_1[56];
+	for (int i = 0; i < 56; ++i)
+	{
+		s_PC_1[i] = d_PC_1[i];
+	}
+
+	for (int i = 0; i < 56; ++i)
+	{
+		printf("%i", s_PC_1[i]);
+	}
+}
+
+__host__
+void profiling()
+{
+	resizeGPUHeap();
+	initArrays();
+	d_tests<<<512, 512 >>>();
+//	d_tests2 << <512, 512>> >();
+//	d_tests3<<<1, 1>>>();
+
+	cudaDeviceSynchronize();
+
+}
+
 int main()
 {
-//	tests();
+//	profiling();
 
+	
 	//cudaSetDevice(3); //uncomment when using gpunode1
 	resizeGPUHeap();
 	initArrays();
-
-
 	//string message = "0123456789ABCDEF", key = "0000000000000000";
 	string message = "0123456789ABCDEF", key = "0B000000000000";
-	char cyphertext[64];
-	string ct = desEncryption(message, key, cyphertext);
+	string ct = desEncryption(message, key);
 	cout << ct << "\n";
-//	crackDes(message, ct.c_str());
+	crackDes(message, ct.c_str());
 	//	cout << "MAIN: AFTER crackDes";
 	cudaDeviceSynchronize();
 
