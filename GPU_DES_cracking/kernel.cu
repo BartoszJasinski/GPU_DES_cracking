@@ -425,7 +425,7 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 	int des_block_size_bits = 64;
 
 	//DEBUG
-	//	printf("\n%s\n", "__device__ desEncryption ");
+	//	printf("\n%s\n", "__device__ desEncryptionForDataBlock ");
 	//	printf("%s\n", "message_binary");
 	//	for (int i = 0; i < message_size; ++i)
 	//	{
@@ -656,7 +656,7 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 
 	int msg_ret[64];
 
-	//	printf("%s\n", "BEFORE desEncryption");
+	//	printf("%s\n", "BEFORE desEncryptionForDataBlock");
 
 	int possible_key_binary_size = 56;
 	int possible_key_binary[56];
@@ -672,9 +672,9 @@ void crackDes(int message_binary[], int cyphertext_binary[], int message_binary_
 			return;
 		}
 		consecutiveKeyGenerator(i, possible_key_binary, possible_key_binary_size);
-		//	printf("%s\n", "BEFORE desEncryption");
+		//	printf("%s\n", "BEFORE desEncryptionForDataBlock");
 		desEncryption(message_binary, message_binary_size, possible_key_binary, 16, msg_ret);
-		//	printf("%s\n", "AFTER desEncryption");
+		//	printf("%s\n", "AFTER desEncryptionForDataBlock");
 
 		if (compareArrays(msg_ret, cyphertext_binary))
 		{
@@ -736,28 +736,28 @@ __global__
 void desEncryption(int message_binary[], int key_binary[], int message_binary_size, int msg_ret[])
 {
 	//DEBUG
-	//	printf("%s\n", "before DEBUG __global__ desEncryption MESSAGE_BINARY");
+	//	printf("%s\n", "before DEBUG __global__ desEncryptionForDataBlock MESSAGE_BINARY");
 	//	for (int i = 0; i < message_binary_size; ++i)
 	//	{
 	//		printf("%i", message_binary[i]);
 	//	}
-	//	printf("%s\n", "after DEBUG __global__ desEncryption MESSAGE_BINARY");
+	//	printf("%s\n", "after DEBUG __global__ desEncryptionForDataBlock MESSAGE_BINARY");
 
 	//int msg_ret[64];
-	//	printf("%s\n", "BEFORE desEncryption");							14 should be here
+	//	printf("%s\n", "BEFORE desEncryptionForDataBlock");							14 should be here
 	desEncryption(message_binary, message_binary_size, key_binary, 16, msg_ret);
-	//	printf("%s\n", "before DEBUG __global__ desEncryption MSG_RET");
+	//	printf("%s\n", "before DEBUG __global__ desEncryptionForDataBlock MSG_RET");
 	//	for (int i = 0; i < 64; ++i)
 	//	{
 	//		printf("%i", 123123123);
 	//	}
-	//	printf("%s\n", "after DEBUG __global__ desEncryption MSG_RET");
+	//	printf("%s\n", "after DEBUG __global__ desEncryptionForDataBlock MSG_RET");
 
 }
 
 
 __host__
-string desEncryption(string message, string key)
+string desEncryptionForDataBlock(string message, string key)
 {
 	string str_message = hex2Bin(message);
 	int h_message_binary_size = 64;
@@ -781,12 +781,12 @@ string desEncryption(string message, string key)
 	cudaMalloc((void**)&d_msg_ret, 64 * sizeof(int));
 
 	//DEBUG
-	//	printf("%s\n", "before DEBUG __host__ desEncryption");
+	//	printf("%s\n", "before DEBUG __host__ desEncryptionForDataBlock");
 	//	for (int i = 0; i < 64; ++i)
 	//	{
 	//		printf("%i", h_message_binary[i]);
 	//	}
-	//	printf("%s\n", "after DEBUG __host__ desEncryption");
+	//	printf("%s\n", "after DEBUG __host__ desEncryptionForDataBlock");
 
 	desEncryption << <1, 1 >> >(d_message_binary, d_key_binary, 64, d_msg_ret);
 
@@ -795,12 +795,12 @@ string desEncryption(string message, string key)
 	int* h_msg_ret = (int*)malloc(64 * sizeof(int));
 	cudaMemcpy(h_msg_ret, d_msg_ret, 64 * sizeof(int), cudaMemcpyDeviceToHost);
 	//DEBUG
-	//	printf("\n%s\n", "before DEBUG __host__ desEncryption H_MSG_RET");
+	//	printf("\n%s\n", "before DEBUG __host__ desEncryptionForDataBlock H_MSG_RET");
 	//	for (int i = 0; i < 64; ++i)
 	//	{
 	//		printf("%i", h_msg_ret[i]);
 	//	}
-	//	printf("%s\n", "after DEBUG __host__ desEncryption H_MSG_RET");
+	//	printf("%s\n", "after DEBUG __host__ desEncryptionForDataBlock H_MSG_RET");
 
 
 	string binary;
@@ -811,6 +811,18 @@ string desEncryption(string message, string key)
 
 	return getHexStringFromBinaryString(binary);
 
+}
+
+
+__host__
+string desEncryption(string message, string key)
+{
+	int block_size = 16;
+	string encryptedMessage = "";
+	for (int i = 0; i < message.size() / block_size; ++i)
+		encryptedMessage += desEncryptionForDataBlock(message.substr(i * block_size, block_size), key);
+
+	return encryptedMessage;
 }
 
 
@@ -826,6 +838,44 @@ void initArrays()
 	cudaMemcpyToSymbol(d_IP_1, IP_1, IP_1_size * sizeof(int));
 
 }
+
+void resizeGPUHeap()
+{
+	size_t size_heap, size_stack;
+	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000 * sizeof(double));
+	cudaDeviceSetLimit(cudaLimitStackSize, 12928);
+	cudaDeviceGetLimit(&size_heap, cudaLimitMallocHeapSize);
+	cudaDeviceGetLimit(&size_stack, cudaLimitStackSize);
+	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
+
+}
+
+
+
+int main()
+{
+//	profiling();
+
+	
+	//cudaSetDevice(3); //uncomment when using gpunode1
+	resizeGPUHeap();
+	initArrays();
+	string message = "1234123412342134987667AAAFDD4236", key = "0B000000000000";
+	string ct = desEncryption(message, key);
+	
+	cout << ct << "\n";
+	crackDes(message, ct.c_str());
+	//	cout << "MAIN: AFTER crackDes";
+	cudaDeviceSynchronize();
+
+
+	cout << endl << "END main" << endl;
+
+	return 0;
+}
+
+
+/*
 
 bool inRange(int number, int lower_bound, int upper_bound)
 {
@@ -848,10 +898,10 @@ void tests()
 	/*unsigned long long last = 10;
 	for (unsigned long long i = 0; i < last; i++)
 	{
-		int key_binary[56];
-		consecutiveKeyGenerator(i, key_binary, 56);
-		cout << "\t" << i << "\n";
-		printArray(key_binary, 56);
+	int key_binary[56];
+	consecutiveKeyGenerator(i, key_binary, 56);
+	cout << "\t" << i << "\n";
+	printArray(key_binary, 56);
 	}
 
 
@@ -861,20 +911,13 @@ void tests()
 	int h_key_binary_size = 56;
 	int h_key_binary[56];
 	str2Int(str_key, h_key_binary, h_key_binary_size);
-	printArray(h_key_binary, h_key_binary_size);*/
+	printArray(h_key_binary, h_key_binary_size);#1#
 }
+*/
 
-void resizeGPUHeap()
-{
-	size_t size_heap, size_stack;
-	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000 * sizeof(double));
-	cudaDeviceSetLimit(cudaLimitStackSize, 12928);
-	cudaDeviceGetLimit(&size_heap, cudaLimitMallocHeapSize);
-	cudaDeviceGetLimit(&size_stack, cudaLimitStackSize);
-	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
 
-}
 
+/*
 __global__
 void d_tests()
 {
@@ -934,32 +977,10 @@ void profiling()
 {
 	resizeGPUHeap();
 	initArrays();
-	d_tests<<<512, 512 >>>();
-//	d_tests2 << <512, 512>> >();
-//	d_tests3<<<1, 1>>>();
+	d_tests << <512, 512 >> >();
+	//	d_tests2 << <512, 512>> >();
+	//	d_tests3<<<1, 1>>>();
 
 	cudaDeviceSynchronize();
 
-}
-
-int main()
-{
-//	profiling();
-
-	
-	//cudaSetDevice(3); //uncomment when using gpunode1
-	resizeGPUHeap();
-	initArrays();
-	//string message = "0123456789ABCDEF", key = "0000000000000000";
-	string message = "0123456789ABCDEF", key = "0B000000000000";
-	string ct = desEncryption(message, key);
-	cout << ct << "\n";
-	crackDes(message, ct.c_str());
-	//	cout << "MAIN: AFTER crackDes";
-	cudaDeviceSynchronize();
-
-
-	cout << endl << "END main" << endl;
-
-	return 0;
-}
+}*/
