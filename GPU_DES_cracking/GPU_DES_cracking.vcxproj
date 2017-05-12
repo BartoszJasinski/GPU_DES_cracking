@@ -154,7 +154,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <CudaCompile Include="kernel.cu" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Key_transitions.txt" />
+    <Text Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arrays.h" />

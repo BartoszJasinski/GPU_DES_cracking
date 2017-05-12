@@ -16,122 +16,9 @@ typedef unsigned char BYTE;
 
 using namespace std;
 
-
 __device__ int key_cracked = 0;
-/*
 
-const int PC_1[56] = { 49, 42, 35, 28, 21, 14, 7, 0,
-50, 43, 36, 29, 22, 15, 8, 1,
-51, 44, 37, 30, 23, 16, 9, 2,
-52, 45, 38, 31, 55, 48, 41, 34,
-27, 20, 13, 6, 54, 47, 40, 33,
-26, 19, 12, 5, 53, 46, 39, 32,
-25, 18, 11, 4, 24, 17, 10, 3 };
-
-
-const int shifts[16] = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
-
-const int PC_2[48] = { 13, 16, 10, 23, 0, 4,
-2, 27, 14, 5, 20, 9,
-22, 18, 11, 3, 25, 7,
-15, 6, 26, 19, 12, 1,
-40, 51, 30, 36, 46, 54,
-29, 39, 50, 44, 32, 47,
-43, 48, 38, 55, 33, 52,
-45, 41, 49, 35, 28, 31 };
-
-
-const int IP[64] = { 57, 49, 41, 33, 25, 17, 9, 1,
-59, 51, 43, 35, 27, 19, 11, 3,
-61, 53, 45, 37, 29, 21, 13, 5,
-63, 55, 47, 39, 31, 23, 15, 7,
-56, 48, 40, 32, 24, 16,  8, 0,
-58, 50, 42, 34, 26, 18, 10, 2,
-60, 52, 44, 36, 28, 20, 12, 4,
-62, 54, 46, 38, 30, 22, 14, 6 };
-
-const int E[48] = { 31, 0, 1, 2, 3, 4,
-3, 4, 5, 6, 7, 8,
-7, 8, 9, 10, 11, 12,
-11, 12, 13, 14, 15, 16,
-15, 16, 17, 18, 19, 20,
-19, 20, 21, 22, 23, 24,
-23, 24, 25, 26, 27, 28,
-27, 28, 29, 30, 31, 0 };
-
-const int S[8][4][16] = { { { 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7 },
-{ 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8 },
-{ 4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0 },
-{ 15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13 } },
-{ { 15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10 },
-{ 3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5 },
-{ 0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15 },
-{ 13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9 } },
-{ { 10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8 },
-{ 13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1 },
-{ 13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7 },
-{ 1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12 } },
-{ { 7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15 },
-{ 13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9 },
-{ 10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4 },
-{ 3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14 } },
-{ { 2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9 },
-{ 14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6 },
-{ 4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14 },
-{ 11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3 } },
-{ { 12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11 },
-{ 10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8 },
-{ 9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6 },
-{ 4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13 } },
-{ { 4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1 },
-{ 13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6 },
-{ 1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2 },
-{ 6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12 } },
-{ { 13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7 },
-{ 1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2 },
-{ 7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8 },
-{ 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 } }
-};
-
-const int P[] = { 15, 6, 19, 20,
-28, 11, 27, 16,
-0, 14, 22, 25,
-4, 17, 30, 9,
-1, 7, 23, 13,
-31, 26, 2, 8,
-18, 12, 29, 5,
-21, 10, 3, 24 };
-
-const int IP_1[] = {
-	39, 7, 47, 15, 55, 23, 63, 31,
-	38, 6, 46, 14, 54, 22, 62, 30,
-	37, 5, 45, 13, 53, 21, 61, 29,
-	36, 4, 44, 12, 52, 20, 60, 28,
-	35, 3, 43, 11, 51, 19, 59, 27,
-	34, 2, 42, 10, 50, 18, 58, 26,
-	33, 1, 41, 9, 49, 17, 57, 25,
-	32, 0, 40, 8, 48, 16, 56, 24 };
-*/
-
-
-__constant__ int d_PC_1[56];
-
-__constant__ int d_shifts[16];
-
-__constant__ int d_PC_2[48];
-
-__constant__ int d_IP[64];
-
-__constant__ int d_E[48];
-
-__constant__ int d_S[8][4][16];
-
-__constant__ int d_P[32];
-
-__constant__ int d_IP_1[64];
-
-
-
+__constant__ int d_PC_1[56], d_shifts[16], d_PC_2[48], d_IP[64], d_E[48], d_S[8][4][16], d_P[32], d_IP_1[64];
 
 __device__ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, const int PC[])
 {
@@ -140,7 +27,7 @@ __device__ void permutePC(int key_binary[], int key_binary_ret[], int key_binary
 
 }
 
-//C and D should have 28 array memebers
+//C and D should have 28 array memebers PROBABLY!!!
 __device__ void createSubkeys(int key[], const int key_size, int C[], int D[], int CD_size, int run_number)
 {
 	const int size = key_size / 2;
@@ -160,8 +47,6 @@ __device__ void createSubkeys(int key[], const int key_size, int C[], int D[], i
 }
 
 
-
-
 __host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int run_number)
 {
 	if (decimal_int <= 1) {
@@ -175,7 +60,6 @@ __host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int r
 }
 
 
-
 __device__ void reverseTab(int tab[], int tab_length)
 {
 	for (int i = 0; i < tab_length / 2; i++)
@@ -186,6 +70,7 @@ __device__ void reverseTab(int tab[], int tab_length)
 
 	}
 }
+
 
 __device__ void appendKeys(int leftKey[], int rightKey[], int key_size, int key_ret[])
 {
@@ -204,12 +89,14 @@ __device__ void expand(int R[], int tab_ret[], const int E[], int E_size)
 		tab_ret[i] = R[E[i]];
 }
 
+
 __device__ void xorArray(int first_tab[], int second_tab[], int tab_size, int tab_ret[])
 {
 	for (int i = 0; i < tab_size; i++)
 		tab_ret[i] = (int)(!first_tab[i] != !second_tab[i]);
 
 }
+
 
 __device__ long long binary2Decimal(int binary_int[], int tab_length)
 {
@@ -225,6 +112,7 @@ __device__ long long binary2Decimal(int binary_int[], int tab_length)
 
 	return dec;
 }
+
 
 __device__ void f(int R[], int K[], int ret_tab[])
 {
@@ -302,6 +190,7 @@ __device__ void reverse(int L[], int R[], int tab_length, int ret_tab[])
 	}
 }
 
+
 __device__ void messageEncode(int message_binary[], int message_size, int K[][48], int msg_ret[])
 {
 	int L[32], R[32];
@@ -373,9 +262,6 @@ __device__ void messageEncode(int message_binary[], int message_size, int K[][48
 	//	}	
 
 }
-
-
-
 
 
 //key_binary_ret should be 64 bit long
@@ -475,6 +361,7 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 
 }
 
+
 const char* hexChar2Bin(char c)
 {
 	// TODO handle default / error
@@ -501,14 +388,16 @@ const char* hexChar2Bin(char c)
 	}
 }
 
-std::string hex2Bin(const std::string& hex)
+
+string hex2Bin(const string& hex)
 {
 	// TODO use a loop from <algorithm> or smth
-	std::string bin;
+	string bin;
 	for (unsigned i = 0; i != hex.length(); ++i)
 		bin += hexChar2Bin(hex[i]);
 	return bin;
 }
+
 
 void str2Int(string& str_int, int ret_int[], int ret_int_size)
 {
@@ -517,61 +406,14 @@ void str2Int(string& str_int, int ret_int[], int ret_int_size)
 
 }
 
-string getHexStringFromBinaryString(string sHex)
-{
-	string sReturn = "";
-	int bit_length = 4;
-	const string const bins[] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
-		"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };
-	for (int i = 0; i < sHex.length() / bit_length; ++i)
-	{
-		string s = sHex.substr(bit_length * i, bit_length);
-
-		if (s == bins[0])
-			sReturn.append("0");
-		if (s == bins[1])
-			sReturn.append("1");
-		if (s == bins[2])
-			sReturn.append("2");
-		if (s == bins[3])
-			sReturn.append("3");
-		if (s == bins[4])
-			sReturn.append("4");
-		if (s == bins[5])
-			sReturn.append("5");
-		if (s == bins[6])
-			sReturn.append("6");
-		if (s == bins[7])
-			sReturn.append("7");
-		if (s == bins[8])
-			sReturn.append("8");
-		if (s == bins[9])
-			sReturn.append("9");
-		if (s == bins[10])
-			sReturn.append("A");
-		if (s == bins[11])
-			sReturn.append("B");
-		if (s == bins[12])
-			sReturn.append("C");
-		if (s == bins[13])
-			sReturn.append("D");
-		if (s == bins[14])
-			sReturn.append("E");
-		if (s == bins[15])
-			sReturn.append("F");
-	}
-
-	return sReturn;
-
-}
 
 __host__ __device__ void consecutiveKeyGenerator(unsigned long long &present_key, int next_key_binary[], int next_key_binary_size)
 {
 	for (int i = 0; i < next_key_binary_size; i++)
 		next_key_binary[i] = 0;
 	decimal2Binary(present_key, next_key_binary, 0);
-	//	present_key++;
 }
+
 
 __host__ __device__ bool compareArrays(int message[], int cyphertext[])
 {
@@ -583,7 +425,6 @@ __host__ __device__ bool compareArrays(int message[], int cyphertext[])
 
 	return true;
 }
-
 
 
 __global__
@@ -658,9 +499,9 @@ void crackDes(string message, string cyphertext)
 	const int nbr_of_block_in_one_dim = 8192; //2 ^ 13;
 	const int test_nbr_of_block = 32768; //2 ^ 15
 	unsigned long long computation_size = pow(2, 47) / (nbr_of_block_in_one_dim);
-	printf("%s\n", "__host__ crackDes BEFORE __device__ crackDes");
+//	printf("%s\n", "__host__ crackDes BEFORE __device__ crackDes");
 	crackDes<<<nbr_of_block_in_one_dim, threads_per_block>>>(d_message_binary, d_cyphertext_binary, h_message_binary_size, computation_size);
-	printf("%s\n", "__host__ crackDes AFTER __device__ crackDes");
+//	printf("%s\n", "__host__ crackDes AFTER __device__ crackDes");
 	//DEBUG
 	//	for (int i = 0; i < 64; i++)
 	//	{
@@ -676,6 +517,7 @@ void crackDes(string message, string cyphertext)
 	//cout << binary;
 
 }
+
 
 __global__
 void desEncryption(int message_binary[], int key_binary[], int message_binary_size, int msg_ret[])
@@ -784,6 +626,7 @@ void initArrays()
 
 }
 
+
 void resizeGPUHeap()
 {
 	size_t size_heap, size_stack;
@@ -794,47 +637,3 @@ void resizeGPUHeap()
 	printf("Heap size found to be %d; Stack size found to be %d\n", (int)size_heap, (int)size_stack);
 
 }
-
-
-
-
-
-/*
-
-bool inRange(int number, int lower_bound, int upper_bound)
-{
-	return (lower_bound <= number && number >= upper_bound);
-}
-
-void printArray(int array[], int size)
-{
-	for (int i = 0; i < size; ++i)
-	{
-		cout << array[i];
-	}
-	cout << "\n";
-}
-
-void tests()
-{
-	cout << sizeof(const int);
-
-	/*unsigned long long last = 10;
-	for (unsigned long long i = 0; i < last; i++)
-	{
-	int key_binary[56];
-	consecutiveKeyGenerator(i, key_binary, 56);
-	cout << "\t" << i << "\n";
-	printArray(key_binary, 56);
-	}
-
-
-	cout << "PTYS" << endl;
-	string key = "10000000000000";
-	string str_key = hex2Bin(key);
-	int h_key_binary_size = 56;
-	int h_key_binary[56];
-	str2Int(str_key, h_key_binary, h_key_binary_size);
-	printArray(h_key_binary, h_key_binary_size);#1#
-}
-*/

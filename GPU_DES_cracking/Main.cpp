@@ -14,14 +14,14 @@ int main()
 	//cudaSetDevice(3); //uncomment when using gpunode1
 	resizeGPUHeap();
 	initArrays();
-	string message = "0123456789ABCDEF", key = "0B000000000000";
+	//message and key has to be in HEX
+	string message = "0123456789ABCDEFFEDCBA9876543210", key = "000000AC000000";
 	string ct = desEncryption(message, key);
 
 	cout << ct << "\n";
 	crackDes(message, ct.c_str());
 	//	cout << "MAIN: AFTER crackDes";
 	cudaDeviceSynchronize();
-
 
 	cout << endl << "END main" << endl;
 
