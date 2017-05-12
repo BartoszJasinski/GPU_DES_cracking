@@ -156,6 +156,19 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <Text Include="Key_transitions.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Arrays.h" />
+    <ClInclude Include="BinaryUtils.cuh" />
+    <ClInclude Include="kernel.cuh" />
+    <ClInclude Include="Main.h" />
+    <ClInclude Include="Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Arrays.cpp" />
+    <ClCompile Include="BinaryUtils.cu" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Utils.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 8.0.targets" />

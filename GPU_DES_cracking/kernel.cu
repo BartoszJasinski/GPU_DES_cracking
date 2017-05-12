@@ -1,5 +1,8 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
+#include "kernel.cuh"
+#include "Utils.h"
+#include "BinaryUtils.cuh"
 
 #include <stdio.h>
 #include <string>
@@ -13,15 +16,6 @@ typedef unsigned char BYTE;
 using namespace std;
 
 int PC_1_size = 56, shifts_size = 16, PC_2_size = 48, IP_size = 64, E_size = 48, S_size_1 = 8, S_size_2 = 4, S_size_3 = 16, P_size = 32, IP_1_size = 64;
-
-//
-//const int PC_1[56] = { 56, 48, 40, 32, 24, 16, 8, 0,
-//57, 49, 41, 33, 25, 17, 9, 1,
-//58, 50, 42, 34, 26, 18, 10, 2,
-//59, 51, 43, 35, 62, 54, 46, 38,
-//30, 22, 14, 6, 61, 53, 45, 37,
-//29, 21, 13, 5, 60, 52, 44, 36,
-//28, 20, 12, 4, 27, 19, 11, 3 };
 
 __device__ int key_cracked = 0;
 
@@ -118,8 +112,6 @@ const int IP_1[] = {
 	32, 0, 40, 8, 48, 16, 56, 24 };
 
 
-
-
 __constant__ int d_PC_1[56];
 
 __constant__ int d_shifts[16];
@@ -138,45 +130,6 @@ __constant__ int d_IP_1[64];
 
 
 
-void fun()
-{
-	for (int i = 0; i < 56; i++)
-	{
-		cout << d_PC_1[i] - 1 << ", ";
-
-		if (!(i % 8))
-			cout << "\n";
-	}
-}
-
-template< typename T, size_t N, size_t M >
-void printArray(T(&theArray)[N][M], int char_endl_nbr) {
-	for (int x = 0; x < N; x++)
-	{
-		for (int y = 0; y < M; y++)
-		{
-			cout << theArray[x][y];
-			if (y == char_endl_nbr)
-				cout << endl;
-		}
-		cout << endl;
-	}
-}
-
-
-template< typename T, size_t N, size_t M >
-void printArray2(T(&theArray)[N][M], int char_endl_nbr) {
-	for (int x = 0; x < N; x++)
-	{
-		for (int y = 0; y < M; y++)
-		{
-			cout << theArray[x][y];
-			if (y == char_endl_nbr)
-				cout << endl;
-		}
-		cout << endl;
-	}
-}
 
 __device__ void permutePC(int key_binary[], int key_binary_ret[], int key_binary_size, const int PC[])
 {
@@ -204,6 +157,9 @@ __device__ void createSubkeys(int key[], const int key_size, int C[], int D[], i
 
 }
 
+
+
+
 __host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int run_number)
 {
 	if (decimal_int <= 1) {
@@ -215,6 +171,8 @@ __host__ __device__ void decimal2Binary(int decimal_int, int binary_int[], int r
 	decimal2Binary(decimal_int >> 1, binary_int, run_number + 1);
 	binary_int[run_number] = remainder;
 }
+
+
 
 __device__ void reverseTab(int tab[], int tab_length)
 {
@@ -515,13 +473,6 @@ __device__ void desEncryption(int message_binary[], int message_size, int key_bi
 
 }
 
-enum DesStringBase
-{
-	Decimal,
-	Hex,
-	Binary//not implemented 
-};
-
 const char* hexChar2Bin(char c)
 {
 	// TODO handle default / error
@@ -543,6 +494,8 @@ const char* hexChar2Bin(char c)
 		case 'D': return "1101";
 		case 'E': return "1110";
 		case 'F': return "1111";
+		default:
+			return "ERROR_hexChar2Bin";
 	}
 }
 
@@ -559,16 +512,6 @@ void str2Int(string& str_int, int ret_int[], int ret_int_size)
 {
 	for (int i = 0; i < ret_int_size; i++)
 		ret_int[i] = (str_int.c_str()[i] - '0');
-
-}
-
-void bin2Hex(string binary)
-{
-	long int longint = 0;
-	for (int i = 0; i < binary.size(); i++)
-		longint += (binary[binary.size() - i - 1] - 48) * pow(2, i);
-	cout << setbase(16);
-	cout << longint;
 
 }
 
@@ -788,7 +731,7 @@ string desEncryptionForDataBlock(string message, string key)
 	//	}
 	//	printf("%s\n", "after DEBUG __host__ desEncryptionForDataBlock");
 
-	desEncryption << <1, 1 >> >(d_message_binary, d_key_binary, 64, d_msg_ret);
+	desEncryption<<<1, 1 >>>(d_message_binary, d_key_binary, 64, d_msg_ret);
 
 	cudaDeviceSynchronize();
 
@@ -852,27 +795,6 @@ void resizeGPUHeap()
 
 
 
-int main()
-{
-//	profiling();
-
-	
-	//cudaSetDevice(3); //uncomment when using gpunode1
-	resizeGPUHeap();
-	initArrays();
-	string message = "1234123412342134987667AAAFDD4236", key = "0B000000000000";
-	string ct = desEncryption(message, key);
-	
-	cout << ct << "\n";
-	crackDes(message, ct.c_str());
-	//	cout << "MAIN: AFTER crackDes";
-	cudaDeviceSynchronize();
-
-
-	cout << endl << "END main" << endl;
-
-	return 0;
-}
 
 
 /*
@@ -914,73 +836,3 @@ void tests()
 	printArray(h_key_binary, h_key_binary_size);#1#
 }
 */
-
-
-
-/*
-__global__
-void d_tests()
-{
-	__shared__ int s_PC_1[56];
-	for (int i = 0; i < 56; ++i)
-	{
-		s_PC_1[i] = d_PC_1[i];
-	}
-
-	int dummy = 0;
-	for (int i = 0; i < 100000; ++i)
-	{
-		for (int j = 0; j < 56; ++j)
-		{
-			dummy += s_PC_1[j];
-			dummy -= s_PC_1[j];
-		}
-	}
-
-	printf("%i", dummy);
-}
-
-__global__
-void d_tests2()
-{
-	int dummy = 0;
-	for (int i = 0; i < 100000; ++i)
-	{
-		for (int j = 0; j < 56; ++j)
-		{
-			dummy += d_PC_1[j];
-			dummy -= d_PC_1[j];
-		}
-	}
-
-	printf("%i", dummy);
-
-}
-
-__global__
-void d_tests3()
-{
-	__shared__ volatile int s_PC_1[56];
-	for (int i = 0; i < 56; ++i)
-	{
-		s_PC_1[i] = d_PC_1[i];
-	}
-
-	for (int i = 0; i < 56; ++i)
-	{
-		printf("%i", s_PC_1[i]);
-	}
-}
-
-__host__
-void profiling()
-{
-	resizeGPUHeap();
-	initArrays();
-	d_tests << <512, 512 >> >();
-	//	d_tests2 << <512, 512>> >();
-	//	d_tests3<<<1, 1>>>();
-
-	cudaDeviceSynchronize();
-
-}*/
