@@ -1,23 +1,24 @@
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
-#include "kernel.cuh"
-#include "Utils.h"
-#include "BinaryUtils.cuh"
-
 #include <stdio.h>
 #include <string>
-#include <iostream>
 #include <stdlib.h>
 #include <vector>
 #include <iomanip>
+
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#include "kernel.cuh"
+#include "Utils.h"
+#include "BinaryUtils.cuh"
+#include "Arrays.h"
 
 typedef unsigned char BYTE;
 
 using namespace std;
 
-int PC_1_size = 56, shifts_size = 16, PC_2_size = 48, IP_size = 64, E_size = 48, S_size_1 = 8, S_size_2 = 4, S_size_3 = 16, P_size = 32, IP_1_size = 64;
 
 __device__ int key_cracked = 0;
+/*
 
 const int PC_1[56] = { 49, 42, 35, 28, 21, 14, 7, 0,
 50, 43, 36, 29, 22, 15, 8, 1,
@@ -110,6 +111,7 @@ const int IP_1[] = {
 	34, 2, 42, 10, 50, 18, 58, 26,
 	33, 1, 41, 9, 49, 17, 57, 25,
 	32, 0, 40, 8, 48, 16, 56, 24 };
+*/
 
 
 __constant__ int d_PC_1[56];
