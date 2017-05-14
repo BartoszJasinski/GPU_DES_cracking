@@ -15,7 +15,7 @@ int main()
 	resizeGPUHeap();
 	initArrays();
 	//message and key has to be in HEX
-	string message = "0123456789ABCDEFFEDCBA9876543210", key = "000000AC000000";
+	string message = "01", key = "0B000000000000";
 	string ct = desEncryption(message, key);
 
 	cout << ct << "\n";

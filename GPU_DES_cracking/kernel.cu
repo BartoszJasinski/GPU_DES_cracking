@@ -602,8 +602,13 @@ string desEncryptionForDataBlock(string message, string key)
 
 
 __host__
-string desEncryption(string message, string key)
+string desEncryption(string &message, string key)
 {
+	const int des_block_size = 16;
+	const string padding = "0000000000000000";
+	if (message.length() % des_block_size)
+		message += padding.substr(0, des_block_size - (message.length() % des_block_size));
+
 	int block_size = 16;
 	string encryptedMessage = "";
 	for (int i = 0; i < message.size() / block_size; ++i)

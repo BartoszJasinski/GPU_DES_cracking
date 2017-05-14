@@ -51,7 +51,7 @@ __host__
 std::string desEncryptionForDataBlock(std::string message, std::string key);
 
 __host__
-std::string desEncryption(std::string message, std::string key);
+std::string desEncryption(std::string &message, std::string key);
 
 void initArrays();
 
